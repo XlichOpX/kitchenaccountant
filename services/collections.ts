@@ -1,4 +1,5 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { Recipe } from "./recipes";
 
 export const getCollections = () => {
   return async () => {
@@ -24,12 +25,28 @@ export const createCollection = async (collection: CreateCollectionOptions) => {
   throw new Error(error.message);
 };
 
+export const getCollection = async (collectionId: number) => {
+  const { data, error } = await supabaseClient
+    .from("collections")
+    .select("*, recipes(*)")
+    .eq("id", collectionId);
+
+  if (!error) {
+    return data[0] as CollectionRecipes;
+  }
+  throw new Error(error.message);
+};
+
 export interface Collection {
   id: number;
   created_at: string;
   name: string;
   user_id: string;
   description: string;
+}
+
+export interface CollectionRecipes extends Collection {
+  recipes: Recipe[];
 }
 
 export interface CreateCollectionOptions {
