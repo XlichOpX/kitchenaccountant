@@ -29,7 +29,7 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
         />
       </Sider>
 
-      <Layout className="min-h-screen">{children}</Layout>
+      <Layout className="h-screen">{children}</Layout>
     </Layout>
   );
 };

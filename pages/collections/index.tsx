@@ -11,7 +11,7 @@ const Collections: NextPageWithLayout = () => {
       <Header className="px-3">
         <h1 className="text-white">Tus colecciones</h1>
       </Header>
-      <Content className="p-3">Tus colecciones</Content>
+      <Content className="p-3 overflow-auto">Tus colecciones</Content>
     </>
   );
 };
