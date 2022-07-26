@@ -19,6 +19,7 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
         <Menu
           defaultSelectedKeys={[selectedKey]}
           theme="dark"
+          onClick={(e) => router.push(`/${e.key}`)}
           items={[
             {
               label: "Tus colecciones",
