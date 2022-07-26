@@ -3,6 +3,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { Card, Layout, List } from "antd";
 import CreateCollectionModal from "components/CreateCollectionModal";
 import SidebarLayout from "layouts/SidebarLayout";
+import Head from "next/head";
 import Link from "next/link";
 import { NextPageWithLayout } from "pages/_app";
 import { getCollections } from "services/collections";
@@ -20,11 +21,13 @@ const Collections: NextPageWithLayout = () => {
 
   return (
     <>
-      <Header className="px-3">
-        <div className="flex justify-between items-center">
-          <h1 className="text-white m-0">Tus colecciones</h1>
-          <CreateCollectionModal />
-        </div>
+      <Head>
+        <title>Tus colecciones | Recipe Cost Calculator</title>
+      </Head>
+
+      <Header className="px-3 bg-white shadow-sm z-10 flex justify-between items-center">
+        <h1 className="m-0">Tus colecciones</h1>
+        <CreateCollectionModal />
       </Header>
 
       <Content className="p-3 overflow-auto">

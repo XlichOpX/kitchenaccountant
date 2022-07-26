@@ -12,7 +12,7 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
   return (
     <Layout>
       <Sider
-        className="h-screen fixed z-10 md:static"
+        className="h-screen fixed z-20 md:static"
         collapsedWidth={0}
         breakpoint="md"
       >

@@ -52,6 +52,7 @@ const CreateCollectionModal = () => {
         icon={<PlusOutlined />}
         shape="circle"
         onClick={() => setVisible(true)}
+        type="primary"
       />
       <Modal
         title="Crear colección"

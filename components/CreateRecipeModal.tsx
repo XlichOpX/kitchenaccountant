@@ -52,6 +52,7 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
         icon={<PlusOutlined />}
         shape="circle"
         onClick={() => setVisible(true)}
+        type="primary"
       />
       <Modal
         title="Crear receta"
