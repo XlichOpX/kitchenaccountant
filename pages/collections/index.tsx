@@ -1,17 +1,56 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Layout } from "antd";
+import { useUser } from "@supabase/auth-helpers-react";
+import { Card, Layout, List } from "antd";
+import CreateCollectionModal from "components/CreateCollectionModal";
 import SidebarLayout from "layouts/SidebarLayout";
+import Link from "next/link";
 import { NextPageWithLayout } from "pages/_app";
+import { getCollections } from "services/collections";
+import useSWR from "swr";
 
 const { Content, Header } = Layout;
 
 const Collections: NextPageWithLayout = () => {
+  const { user } = useUser();
+
+  const { data: collections, error } = useSWR(
+    user && "collections",
+    getCollections()
+  );
+
   return (
     <>
       <Header className="px-3">
-        <h1 className="text-white">Tus colecciones</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-white m-0">Tus colecciones</h1>
+          <CreateCollectionModal />
+        </div>
       </Header>
-      <Content className="p-3 overflow-auto">Tus colecciones</Content>
+
+      <Content className="p-3 overflow-auto">
+        <List
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 2,
+            md: 2,
+            lg: 3,
+            column: 4,
+          }}
+          dataSource={collections}
+          renderItem={(collection) => (
+            <List.Item>
+              <Link href={`/collections/${collection.id}`}>
+                <a>
+                  <Card title={collection.name} hoverable>
+                    {collection.description}
+                  </Card>
+                </a>
+              </Link>
+            </List.Item>
+          )}
+        />
+      </Content>
     </>
   );
 };
