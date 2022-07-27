@@ -1,24 +1,18 @@
-import { useUser } from "@supabase/auth-helpers-react";
 import { Card, Layout, List } from "antd";
 import CreateRecipeModal from "components/CreateRecipeModal";
+import useCollection from "hooks/useCollection";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app";
-import { getCollection } from "services/collections";
-import useSWR from "swr";
 
 const { Header, Content } = Layout;
 
 const CollectionDetail: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { user } = useUser();
-
-  const { data: collection, error } = useSWR(user && `collections/${id}`, () =>
-    getCollection(Number(id))
-  );
+  let { id } = router.query;
+  const { collection } = useCollection(Number(id));
 
   return (
     <>

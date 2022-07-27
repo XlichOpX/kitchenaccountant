@@ -1,23 +1,16 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
 import { Card, Layout, List } from "antd";
 import CreateCollectionModal from "components/CreateCollectionModal";
+import useCollections from "hooks/useCollections";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPageWithLayout } from "pages/_app";
-import { getCollections } from "services/collections";
-import useSWR from "swr";
 
 const { Content, Header } = Layout;
 
 const Collections: NextPageWithLayout = () => {
-  const { user } = useUser();
-
-  const { data: collections, error } = useSWR(
-    user && "collections",
-    getCollections()
-  );
+  const { collections } = useCollections();
 
   return (
     <>
