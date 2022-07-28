@@ -1,13 +1,12 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, Layout, List } from "antd";
-import CreateCollectionModal from "components/CreateCollectionModal";
+import { Card, List } from "antd";
+import { CreateCollectionModal, PageContent, PageHeader } from "components";
 import useCollections from "hooks/useCollections";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPageWithLayout } from "pages/_app";
-
-const { Content, Header } = Layout;
+import getTitle from "utils/getTitle";
 
 const Collections: NextPageWithLayout = () => {
   const { collections } = useCollections();
@@ -15,15 +14,15 @@ const Collections: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Tus colecciones | Recipe Cost Calculator</title>
+        <title>{getTitle("Tus colecciones")}</title>
       </Head>
 
-      <Header className="px-3 bg-white shadow-sm z-10 flex justify-between items-center">
+      <PageHeader>
         <h1 className="m-0">Tus colecciones</h1>
         <CreateCollectionModal />
-      </Header>
+      </PageHeader>
 
-      <Content className="p-3 overflow-auto">
+      <PageContent>
         <List
           grid={{
             gutter: 16,
@@ -46,7 +45,7 @@ const Collections: NextPageWithLayout = () => {
             </List.Item>
           )}
         />
-      </Content>
+      </PageContent>
     </>
   );
 };

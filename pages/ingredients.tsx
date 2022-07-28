@@ -1,13 +1,12 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, Layout, List } from "antd";
-import CreateIngredientModal from "components/CreateIngredientModal";
+import { Card, List } from "antd";
+import { CreateIngredientModal, PageContent, PageHeader } from "components";
 import useIngredients from "hooks/useIngredients";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPageWithLayout } from "pages/_app";
-
-const { Content, Header } = Layout;
+import getTitle from "utils/getTitle";
 
 const Ingredients: NextPageWithLayout = () => {
   const { ingredients, error } = useIngredients();
@@ -15,15 +14,15 @@ const Ingredients: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Tus ingredientes | Recipe Cost Calculator</title>
+        <title>{getTitle("Tus ingredientes")}</title>
       </Head>
 
-      <Header className="px-3 bg-white shadow-sm z-10 flex justify-between items-center">
+      <PageHeader>
         <h1 className="m-0">Tus ingredientes</h1>
         <CreateIngredientModal />
-      </Header>
+      </PageHeader>
 
-      <Content className="p-3 overflow-auto">
+      <PageContent>
         <List
           grid={{
             gutter: 16,
@@ -50,7 +49,7 @@ const Ingredients: NextPageWithLayout = () => {
             </List.Item>
           )}
         />
-      </Content>
+      </PageContent>
     </>
   );
 };

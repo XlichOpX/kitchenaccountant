@@ -7,6 +7,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import getTitle from "utils/getTitle";
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const Login: NextPage = () => {
   return (
     <div className="h-screen max-w-sm mx-auto flex flex-col justify-center p-5">
       <Head>
-        <title>Iniciar sesión | Recipe Cost Calculator</title>
+        <title>{getTitle("Iniciar sesión")}</title>
       </Head>
 
       <header>

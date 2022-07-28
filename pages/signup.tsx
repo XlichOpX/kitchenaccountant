@@ -7,6 +7,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import getTitle from "utils/getTitle";
 
 const SignUp: NextPage = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const SignUp: NextPage = () => {
   return (
     <div className="h-screen max-w-sm mx-auto flex flex-col justify-center p-5">
       <Head>
-        <title>Registrarse | Recipe Cost Calculator</title>
+        <title>{getTitle("Registrarse")}</title>
       </Head>
 
       <header>
