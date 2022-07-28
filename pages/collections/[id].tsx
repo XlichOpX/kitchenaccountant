@@ -41,9 +41,7 @@ const CollectionDetail: NextPageWithLayout = () => {
           dataSource={collection?.recipes}
           renderItem={(recipe) => (
             <List.Item>
-              <Link
-                href={`/collections/${recipe.collection_id}/recipes/${recipe.id}`}
-              >
+              <Link href={`/recipes/${recipe.id}`}>
                 <a>
                   <Card title={recipe.name} hoverable>
                     {recipe.description}

@@ -25,7 +25,10 @@ export const createCollection = async (collection: CreateCollectionOptions) => {
 export const getCollection = async (collectionId: number) => {
   const { data, error } = await supabaseClient
     .from("collections")
-    .select("*, recipes(*)")
+    .select(
+      `id, name, description, created_at,
+      recipes ( id, name, description, created_at )`
+    )
     .eq("id", collectionId)
     .order("name", { foreignTable: "recipes" });
 
@@ -35,11 +38,24 @@ export const getCollection = async (collectionId: number) => {
   throw new Error(error.message);
 };
 
-export const createRecipe = async (recipe: CreateRecipeOptions) => {
-  const { data, error } = await supabaseClient.from("recipes").insert(recipe);
+export const createRecipe = async ({
+  ingredients,
+  ...recipe
+}: CreateRecipeOptions) => {
+  const { data: newRecipe, error } = await supabaseClient
+    .from("recipes")
+    .insert(recipe);
 
   if (!error) {
-    return data[0] as Recipe;
+    const { error } = await supabaseClient.from("recipe_ingredients").insert(
+      ingredients.map((i) => ({ ...i, recipe_id: newRecipe[0].id })),
+      { returning: "minimal" }
+    );
+
+    if (!error) {
+      return true;
+    }
+    throw new Error(error.message);
   }
   throw new Error(error.message);
 };
@@ -48,8 +64,6 @@ export interface Recipe {
   id: number;
   created_at: string;
   name: string;
-  profit_percentage: number;
-  collection_id: number;
   description: string;
 }
 
@@ -57,13 +71,13 @@ export interface CreateRecipeOptions {
   name: string;
   description: string;
   collection_id: number;
+  ingredients: { ingredient_id: number; units: number }[];
 }
 
 export interface Collection {
   id: number;
   created_at: string;
   name: string;
-  user_id: string;
   description: string;
 }
 
