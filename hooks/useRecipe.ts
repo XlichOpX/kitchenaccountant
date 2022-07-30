@@ -1,5 +1,6 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import { getRecipe } from "services/recipes";
+import { useCallback } from "react";
+import { deleteRecipe as svDeleteRecipe, getRecipe } from "services/recipes";
 import useSWR from "swr";
 
 const useRecipe = (id: number) => {
@@ -8,8 +9,17 @@ const useRecipe = (id: number) => {
     getRecipe(id)
   );
 
+  const deleteRecipe = useCallback(async () => {
+    try {
+      await svDeleteRecipe(id);
+    } catch (error) {
+      throw error;
+    }
+  }, [id]);
+
   return {
     recipe,
+    deleteRecipe,
     error,
     isLoading: !recipe && !error,
   };

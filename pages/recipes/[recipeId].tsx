@@ -1,18 +1,28 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, Col, PageHeader, Row, Space, Statistic, Typography } from "antd";
+import {
+  Button,
+  Card,
+  message,
+  Modal,
+  PageHeader,
+  Space,
+  Statistic,
+} from "antd";
 import { Header, PageContent } from "components";
 import useRecipe from "hooks/useRecipe";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app";
 import getTitle from "utils/getTitle";
 
-const { Title, Paragraph } = Typography;
+const { confirm } = Modal;
 
 const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
   recipeId,
 }) => {
-  const { recipe, error } = useRecipe(Number(recipeId));
+  const { recipe, deleteRecipe } = useRecipe(Number(recipeId));
+  const router = useRouter();
 
   if (!recipe) return null;
 
@@ -28,7 +38,33 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
       </Head>
 
       <Header>
-        <PageHeader title={recipe.name} />
+        <PageHeader
+          title={recipe.name}
+          extra={[
+            <Button
+              key={1}
+              danger
+              onClick={() =>
+                confirm({
+                  title: `¿Está seguro de eliminar la receta "${recipe.name}"?`,
+                  okText: "Sí, eliminar",
+                  cancelText: "Cancelar",
+                  onOk: async () => {
+                    try {
+                      await deleteRecipe();
+                      router.replace(`/collections/${recipe.collection_id}`);
+                    } catch (error) {
+                      if (error instanceof Error)
+                        message.error({ content: error.message });
+                    }
+                  },
+                })
+              }
+            >
+              Eliminar
+            </Button>,
+          ]}
+        />
       </Header>
 
       <PageContent>

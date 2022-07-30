@@ -20,6 +20,17 @@ export const getRecipe = async (id: number) => {
   throw new Error(error.message);
 };
 
+export const deleteRecipe = async (recipeId: number) => {
+  const { data, error } = await supabaseClient
+    .from("recipes")
+    .delete()
+    .eq("id", recipeId);
+
+  if (!error) return data[0] as Recipe;
+
+  throw new Error(error.message);
+};
+
 export interface Recipe {
   id: number;
   created_at: string;
