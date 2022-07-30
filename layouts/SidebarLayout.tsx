@@ -11,12 +11,8 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
   const selectedKey = router.pathname.split("/")[1];
 
   return (
-    <Layout>
-      <Sider
-        className="h-screen fixed z-20 md:static"
-        collapsedWidth={0}
-        breakpoint="md"
-      >
+    <Layout className="h-screen">
+      <Sider className="h-full fixed z-20" collapsedWidth={0} breakpoint="md">
         <Menu
           defaultSelectedKeys={[selectedKey]}
           theme="dark"
@@ -36,7 +32,9 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
         />
       </Sider>
 
-      <Layout className="h-screen">{children}</Layout>
+      <Layout className="min-h-screen md:ml-[200px] block overflow-auto">
+        {children}
+      </Layout>
     </Layout>
   );
 };

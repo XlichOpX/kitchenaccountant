@@ -1,6 +1,6 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, List } from "antd";
-import { CreateCollectionModal, PageContent, PageHeader } from "components";
+import { Card, List, PageHeader } from "antd";
+import { CreateCollectionModal, PageContent, Header } from "components";
 import useCollections from "hooks/useCollections";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
@@ -17,10 +17,12 @@ const Collections: NextPageWithLayout = () => {
         <title>{getTitle("Tus colecciones")}</title>
       </Head>
 
-      <PageHeader>
-        <h1 className="m-0">Tus colecciones</h1>
-        <CreateCollectionModal />
-      </PageHeader>
+      <Header>
+        <PageHeader
+          title="Tus colecciones"
+          extra={[<CreateCollectionModal key={1} />]}
+        />
+      </Header>
 
       <PageContent>
         <List

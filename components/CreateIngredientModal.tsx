@@ -48,10 +48,11 @@ const CreateIngredientModal = () => {
     <>
       <Button
         icon={<PlusOutlined />}
-        shape="circle"
         onClick={() => setVisible(true)}
         type="primary"
-      />
+      >
+        Crear
+      </Button>
       <Modal
         title="Crear ingrediente"
         visible={visible}

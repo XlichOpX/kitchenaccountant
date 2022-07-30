@@ -69,7 +69,7 @@ export interface Recipe {
 
 export interface CreateRecipeOptions {
   name: string;
-  description: string;
+  description?: string;
   collection_id: number;
   ingredients: { ingredient_id: number; units: number }[];
 }
@@ -78,7 +78,7 @@ export interface Collection {
   id: number;
   created_at: string;
   name: string;
-  description: string;
+  description?: string;
 }
 
 export interface CollectionRecipes extends Collection {

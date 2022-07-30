@@ -1,6 +1,6 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, List } from "antd";
-import { CreateRecipeModal, PageContent, PageHeader } from "components";
+import { Card, List, PageHeader, Space } from "antd";
+import { CreateRecipeModal, PageContent, Header } from "components";
 import useCollection from "hooks/useCollection";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
@@ -24,16 +24,15 @@ const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
         <title>{getTitle(collection.name)}</title>
       </Head>
 
-      <PageHeader>
-        <h1 className="m-0">{collection.name}</h1>
-        <CreateRecipeModal collectionId={collectionId} />
-      </PageHeader>
+      <Header>
+        <PageHeader
+          title={collection.name}
+          extra={[<CreateRecipeModal key={1} collectionId={collectionId} />]}
+        />
+      </Header>
 
       <PageContent>
-        <Typography>
-          <Paragraph className="m-0">{collection.description}</Paragraph>
-
-          <Title level={2}>Recetas</Title>
+        <Space direction="vertical" size="large" className="flex">
           <List
             grid={{
               gutter: 16,
@@ -56,7 +55,13 @@ const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
               </List.Item>
             )}
           />
-        </Typography>
+
+          {collection.description && (
+            <Card title="Descripción">
+              <p>{collection.description}</p>
+            </Card>
+          )}
+        </Space>
       </PageContent>
     </>
   );

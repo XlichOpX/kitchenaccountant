@@ -1,6 +1,6 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, List } from "antd";
-import { CreateIngredientModal, PageContent, PageHeader } from "components";
+import { Card, List, PageHeader } from "antd";
+import { CreateIngredientModal, PageContent, Header } from "components";
 import useIngredients from "hooks/useIngredients";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
@@ -17,10 +17,12 @@ const Ingredients: NextPageWithLayout = () => {
         <title>{getTitle("Tus ingredientes")}</title>
       </Head>
 
-      <PageHeader>
-        <h1 className="m-0">Tus ingredientes</h1>
-        <CreateIngredientModal />
-      </PageHeader>
+      <Header>
+        <PageHeader
+          title="Tus ingredientes"
+          extra={[<CreateIngredientModal key={1} />]}
+        />
+      </Header>
 
       <PageContent>
         <List

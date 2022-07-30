@@ -1,6 +1,6 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Col, Row, Statistic, Typography } from "antd";
-import { PageContent, PageHeader } from "components";
+import { Card, Col, PageHeader, Row, Space, Statistic, Typography } from "antd";
+import { Header, PageContent } from "components";
 import useRecipe from "hooks/useRecipe";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
@@ -27,51 +27,50 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
         <title>{getTitle(recipe.name)}</title>
       </Head>
 
-      <PageHeader>
-        <h1 className="m-0">{recipe.name}</h1>
-      </PageHeader>
+      <Header>
+        <PageHeader title={recipe.name} />
+      </Header>
 
       <PageContent>
-        <Typography>
-          <Title>{recipe.name}</Title>
-          <Paragraph>{recipe.description}</Paragraph>
+        <Space direction="vertical" size="large" className="flex">
+          <Card title="Ingredientes">
+            <ul>
+              {recipe.ingredients.map(({ ingredient, units }) => (
+                <li key={ingredient.id}>
+                  {ingredient.name} - {units}{" "}
+                  {ingredient.measurement_unit.symbol}
+                </li>
+              ))}
+            </ul>
+          </Card>
 
-          <Title level={2}>Ingredientes</Title>
-
-          <ul>
-            {recipe.ingredients.map(({ ingredient, units }) => (
-              <li key={ingredient.id}>
-                {ingredient.name} - {units} {ingredient.measurement_unit.symbol}
-              </li>
-            ))}
-          </ul>
-
-          <Title level={2}>Cálculos</Title>
-          <Row gutter={16} className="-mx-4">
-            <Col>
+          <Card title="Cálculos">
+            <Space size="large">
               <Statistic
                 title="Costo de la receta"
                 value={recipeCost}
                 precision={2}
               />
-            </Col>
 
-            <Col>
               <Statistic
                 title="Ganancia deseada"
                 value={`${recipe.profit_percentage * 100} %`}
               />
-            </Col>
 
-            <Col>
               <Statistic
                 title="Precio de venta sugerido"
                 value={recipeCost + recipeCost * recipe.profit_percentage}
                 precision={2}
               />
-            </Col>
-          </Row>
-        </Typography>
+            </Space>
+          </Card>
+
+          {recipe.description && (
+            <Card title="Descripción">
+              <p>{recipe.description}</p>
+            </Card>
+          )}
+        </Space>
       </PageContent>
     </>
   );

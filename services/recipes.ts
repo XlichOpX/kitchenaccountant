@@ -26,7 +26,7 @@ export interface Recipe {
   name: string;
   profit_percentage: number;
   collection_id: number;
-  description: string;
+  description?: string;
   ingredients: RecipeIngredient[];
 }
 
