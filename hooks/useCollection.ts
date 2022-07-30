@@ -1,4 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
+import { useCallback } from "react";
 import {
   createRecipe,
   CreateRecipeOptions,
@@ -13,20 +14,18 @@ const useCollection = (id: number) => {
     getCollection(id)
   );
 
-  if (!user) return null;
-
-  const addRecipe = async (recipe: CreateRecipeOptions) => {
-    try {
-      await createRecipe({
-        ...recipe,
-        collection_id: id,
-        user_id: user.id,
-      });
-      mutate(`collections/${id}`);
-    } catch (error) {
-      throw error;
-    }
-  };
+  const addRecipe = useCallback(
+    async (recipe: CreateRecipeOptions) => {
+      if (!user) return;
+      try {
+        await createRecipe({ ...recipe, collection_id: id, user_id: user.id });
+        mutate(`collections/${id}`);
+      } catch (error) {
+        throw error;
+      }
+    },
+    [id, mutate, user]
+  );
 
   return {
     collection,

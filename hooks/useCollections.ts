@@ -1,4 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
+import { useCallback } from "react";
 import {
   createCollection,
   CreateCollectionOptions,
@@ -13,19 +14,19 @@ const useCollections = () => {
     getCollections()
   );
 
-  const addCollection = async (collection: CreateCollectionOptions) => {
-    if (!user) return;
+  const addCollection = useCallback(
+    async (collection: CreateCollectionOptions) => {
+      if (!user) return;
 
-    try {
-      await createCollection({
-        ...collection,
-        user_id: user.id,
-      });
-      mutate("collections");
-    } catch (error) {
-      throw error;
-    }
-  };
+      try {
+        await createCollection({ ...collection, user_id: user.id });
+        mutate("collections");
+      } catch (error) {
+        throw error;
+      }
+    },
+    [mutate, user]
+  );
 
   return {
     collections,

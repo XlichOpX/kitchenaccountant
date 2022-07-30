@@ -1,4 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
+import { useCallback } from "react";
 import {
   createIngredient,
   CreateIngredientOptions,
@@ -13,19 +14,19 @@ const useIngredients = () => {
     getIngredients()
   );
 
-  const addIngredient = async (ingredient: CreateIngredientOptions) => {
-    if (!user) return;
+  const addIngredient = useCallback(
+    async (ingredient: CreateIngredientOptions) => {
+      if (!user) return;
 
-    try {
-      await createIngredient({
-        ...ingredient,
-        user_id: user.id,
-      });
-      mutate("ingredients");
-    } catch (error) {
-      throw error;
-    }
-  };
+      try {
+        await createIngredient({ ...ingredient, user_id: user.id });
+        mutate("ingredients");
+      } catch (error) {
+        throw error;
+      }
+    },
+    [mutate, user]
+  );
 
   return {
     ingredients,

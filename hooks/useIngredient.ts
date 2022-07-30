@@ -5,6 +5,7 @@ import {
   updateIngredient as svUpdateIngredient,
   deleteIngredient as svDeleteIngredient,
 } from "services/ingredients";
+import { useCallback } from "react";
 
 const useIngredient = (id: number) => {
   const { user } = useUser();
@@ -13,22 +14,25 @@ const useIngredient = (id: number) => {
     getIngredient(id)
   );
 
-  const updateIngredient = async (ingredient: Partial<Ingredient>) => {
-    try {
-      await svUpdateIngredient(ingredient);
-      mutate(`ingredients/${id}`);
-    } catch (error) {
-      throw error;
-    }
-  };
+  const updateIngredient = useCallback(
+    async (ingredient: Partial<Ingredient>) => {
+      try {
+        await svUpdateIngredient(ingredient);
+        mutate(`ingredients/${id}`);
+      } catch (error) {
+        throw error;
+      }
+    },
+    [id, mutate]
+  );
 
-  const deleteIngredient = async (ingredientId: number) => {
+  const deleteIngredient = useCallback(async (ingredientId: number) => {
     try {
       await svDeleteIngredient(ingredientId);
     } catch (error) {
       throw error;
     }
-  };
+  }, []);
 
   return {
     ingredient,
