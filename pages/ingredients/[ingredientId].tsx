@@ -2,6 +2,7 @@ import { EditFilled } from "@ant-design/icons";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { Button, Descriptions, Layout, PageHeader } from "antd";
 import { PageContent } from "components";
+import EditIngredientModal from "components/EditIngredientModal";
 import useIngredient from "hooks/useIngredient";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
@@ -28,11 +29,7 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
           title={ingredient.name}
           onBack={() => window.history.back()}
           className="shadow-md"
-          // extra={[
-          //   <Button key={1} type="primary" icon={<EditFilled />}>
-          //     Editar
-          //   </Button>,
-          // ]}
+          extra={[<EditIngredientModal key={1} ingredient={ingredient} />]}
         />
       </Header>
 

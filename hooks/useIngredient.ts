@@ -1,6 +1,7 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import { getIngredient } from "services/ingredients";
+import { getIngredient, Ingredient } from "services/ingredients";
 import useSWR, { useSWRConfig } from "swr";
+import { updateIngredient as svUpdateIngredient } from "services/ingredients";
 
 const useIngredient = (id: number) => {
   const { user } = useUser();
@@ -9,10 +10,20 @@ const useIngredient = (id: number) => {
     getIngredient(id)
   );
 
+  const updateIngredient = async (ingredient: Partial<Ingredient>) => {
+    try {
+      await svUpdateIngredient(ingredient);
+      mutate(`ingredients/${id}`);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return {
     ingredient,
     error,
     isLoading: !ingredient && !error,
+    updateIngredient,
   };
 };
 

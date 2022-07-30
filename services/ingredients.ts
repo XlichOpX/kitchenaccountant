@@ -40,6 +40,23 @@ export const getIngredient = async (ingredientId: number) => {
   throw new Error(error.message);
 };
 
+export const updateIngredient = async ({
+  id,
+  ...ingredient
+}: Partial<Ingredient>) => {
+  if (!id) throw new Error("Ingredient id is undefined");
+
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .update(ingredient)
+    .eq("id", id);
+
+  if (!error) {
+    return data[0] as Ingredient;
+  }
+  throw new Error(error.message);
+};
+
 export interface Ingredient {
   id: number;
   name: string;
