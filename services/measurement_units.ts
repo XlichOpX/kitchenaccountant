@@ -12,7 +12,7 @@ export const getMeasurementUnits = async () => {
   throw new Error(error.message);
 };
 
-interface MeasurementUnit {
+export interface MeasurementUnit {
   id: number;
   name: string;
   symbol: string;

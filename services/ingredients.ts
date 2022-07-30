@@ -1,4 +1,5 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { MeasurementUnit } from "./measurement_units";
 
 export const getIngredients = async () => {
   const { data, error } = await supabaseClient
@@ -29,7 +30,7 @@ export const getIngredient = async (ingredientId: number) => {
   const { data, error } = await supabaseClient
     .from("ingredients")
     .select(
-      "id, name, price, package_units, measurement_unit:measurement_unit_id ( name, symbol )"
+      "id, name, price, unit_price, package_units, measurement_unit:measurement_unit_id ( id, name, symbol )"
     )
     .eq("id", ingredientId);
 
@@ -42,9 +43,10 @@ export const getIngredient = async (ingredientId: number) => {
 export interface Ingredient {
   id: number;
   name: string;
-  measurement_unit: { name: string; symbol: string };
+  measurement_unit: MeasurementUnit;
   package_units: number;
   price: number;
+  unit_price: number;
 }
 
 export interface CreateIngredientOptions {
