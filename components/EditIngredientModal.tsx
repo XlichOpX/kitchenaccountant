@@ -30,7 +30,6 @@ const EditIngredientModal = ({ ingredient }: { ingredient: Ingredient }) => {
 
   const onFinish = async (ingredientData: Partial<Ingredient>) => {
     setIsSubmitting(true);
-    console.log({ ingredient });
 
     try {
       await updateIngredient({ ...ingredientData, id: ingredient.id });

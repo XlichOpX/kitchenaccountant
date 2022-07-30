@@ -1,20 +1,23 @@
-import { EditFilled } from "@ant-design/icons";
+import { CloseOutlined, EditFilled } from "@ant-design/icons";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Button, Descriptions, Layout, PageHeader } from "antd";
+import { Button, Descriptions, Layout, Modal, PageHeader, message } from "antd";
 import { PageContent } from "components";
 import EditIngredientModal from "components/EditIngredientModal";
 import useIngredient from "hooks/useIngredient";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app";
 import getTitle from "utils/getTitle";
 
 const { Header } = Layout;
+const { confirm } = Modal;
 
 const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
   ingredientId,
 }) => {
-  const { ingredient } = useIngredient(ingredientId);
+  const { ingredient, deleteIngredient } = useIngredient(ingredientId);
+  const router = useRouter();
 
   if (!ingredient) return null;
 
@@ -29,7 +32,34 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
           title={ingredient.name}
           onBack={() => window.history.back()}
           className="shadow-md"
-          extra={[<EditIngredientModal key={1} ingredient={ingredient} />]}
+          extra={[
+            <EditIngredientModal key={1} ingredient={ingredient} />,
+            <Button
+              key={2}
+              icon={<CloseOutlined />}
+              danger
+              onClick={() =>
+                confirm({
+                  title: "¿Está seguro de eliminar este ingrediente?",
+                  okText: "Sí, eliminar",
+                  okButtonProps: { danger: true },
+                  cancelText: "Cancelar",
+                  onOk: async () => {
+                    try {
+                      await deleteIngredient(ingredient.id);
+                      router.replace("/ingredients");
+                    } catch (error) {
+                      if (error instanceof Error) {
+                        message.error(error.message);
+                      }
+                    }
+                  },
+                })
+              }
+            >
+              Eliminar
+            </Button>,
+          ]}
         />
       </Header>
 

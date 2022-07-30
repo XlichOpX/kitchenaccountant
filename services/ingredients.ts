@@ -57,6 +57,21 @@ export const updateIngredient = async ({
   throw new Error(error.message);
 };
 
+export const deleteIngredient = async (ingredientId: number) => {
+  const { data, error } = await supabaseClient
+    .from("ingredients")
+    .delete()
+    .eq("id", ingredientId);
+
+  if (!error) {
+    return data[0] as Ingredient;
+  }
+  if (error.code === "23503") {
+    throw new Error("El ingrediente está siendo usado en una o más recetas.");
+  }
+  throw new Error(error.message);
+};
+
 export interface Ingredient {
   id: number;
   name: string;
