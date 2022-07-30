@@ -7,6 +7,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { NextPageWithLayout } from "pages/_app";
 import getTitle from "utils/getTitle";
+import { Typography } from "antd";
+
+const { Paragraph, Title } = Typography;
 
 const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
   collectionId,
@@ -27,31 +30,33 @@ const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
       </PageHeader>
 
       <PageContent>
-        <p className="m-0">{collection.description}</p>
+        <Typography>
+          <Paragraph className="m-0">{collection.description}</Paragraph>
 
-        <List
-          header={<h2 className="m-0">Recetas</h2>}
-          grid={{
-            gutter: 16,
-            xs: 1,
-            sm: 2,
-            md: 2,
-            lg: 3,
-            column: 4,
-          }}
-          dataSource={collection.recipes}
-          renderItem={(recipe) => (
-            <List.Item>
-              <Link href={`/collections/${collectionId}/recipes/${recipe.id}`}>
-                <a>
-                  <Card title={recipe.name} hoverable>
-                    {recipe.description}
-                  </Card>
-                </a>
-              </Link>
-            </List.Item>
-          )}
-        />
+          <Title level={2}>Recetas</Title>
+          <List
+            grid={{
+              gutter: 16,
+              xs: 1,
+              sm: 2,
+              md: 2,
+              lg: 3,
+              column: 4,
+            }}
+            dataSource={collection.recipes}
+            renderItem={(recipe) => (
+              <List.Item>
+                <Link href={`/recipes/${recipe.id}`}>
+                  <a>
+                    <Card title={recipe.name} hoverable>
+                      {recipe.description}
+                    </Card>
+                  </a>
+                </Link>
+              </List.Item>
+            )}
+          />
+        </Typography>
       </PageContent>
     </>
   );
