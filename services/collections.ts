@@ -71,6 +71,7 @@ export interface CreateRecipeOptions {
   name: string;
   description?: string;
   collection_id: number;
+  user_id: string;
   ingredients: { ingredient_id: number; units: number }[];
 }
 
