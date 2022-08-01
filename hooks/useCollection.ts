@@ -26,6 +26,7 @@ const useCollection = (collectionId: number) => {
           user_id: user.id,
         });
         mutate(`collections/${collectionId}`);
+        mutate("recipes");
       } catch (error) {
         throw error;
       }
@@ -36,6 +37,7 @@ const useCollection = (collectionId: number) => {
   const deleteCollection = useCallback(async () => {
     await svDeleteCollection(collectionId);
     mutate("collections");
+    mutate("recipes");
   }, [collectionId, mutate]);
 
   return {

@@ -14,9 +14,8 @@ import {
   Row,
   Select,
 } from "antd";
-import useIngredients from "hooks/useIngredients";
-import useRecipes from "hooks/useRecipes";
-import { useEffect, useState } from "react";
+import { useIngredients, useRecipes } from "hooks";
+import { useLayoutEffect, useState } from "react";
 import { Recipe, updateRecipe } from "services/recipes";
 const { Option } = Select;
 
@@ -36,7 +35,7 @@ const EditRecipeModal = ({
   const [deletedIngredients, setDeletedIngredients] = useState<number[]>([]);
   const [deletedSubrecipes, setDeletedSubrecipes] = useState<number[]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     form.setFieldsValue({
       name: recipe.name,
       description: recipe.description,

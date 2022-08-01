@@ -1,7 +1,7 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, List, Modal, PageHeader } from "antd";
+import { Card, List, PageHeader } from "antd";
 import { CreateCollectionModal, Header, PageContent } from "components";
-import useCollections from "hooks/useCollections";
+import { useCollections } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";

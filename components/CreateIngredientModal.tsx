@@ -9,8 +9,7 @@ import {
   Select,
   Space,
 } from "antd";
-import useIngredients from "hooks/useIngredients";
-import useMeasurementUnits from "hooks/useMeasurementUnits";
+import { useIngredients, useMeasurementUnits } from "hooks";
 import { useState } from "react";
 import { CreateIngredientOptions } from "services/ingredients";
 

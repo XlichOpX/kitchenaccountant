@@ -11,7 +11,7 @@ import {
   Space,
 } from "antd";
 import { CreateRecipeModal, Header, PageContent } from "components";
-import useCollection from "hooks/useCollection";
+import { useCollection } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";

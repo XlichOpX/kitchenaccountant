@@ -1,7 +1,7 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { Card, List, PageHeader } from "antd";
-import { CreateIngredientModal, PageContent, Header } from "components";
-import useIngredients from "hooks/useIngredients";
+import { CreateIngredientModal, Header, PageContent } from "components";
+import { useIngredients } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";

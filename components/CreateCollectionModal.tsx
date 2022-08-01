@@ -1,6 +1,6 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Alert, Button, Form, Input, Modal } from "antd";
-import useCollections from "hooks/useCollections";
+import { useCollections } from "hooks";
 import { useState } from "react";
 import { CreateCollectionOptions } from "services/collections";
 

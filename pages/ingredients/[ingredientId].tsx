@@ -1,9 +1,8 @@
 import { CloseOutlined } from "@ant-design/icons";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { Button, Card, Descriptions, message, Modal, PageHeader } from "antd";
-import { Header, PageContent } from "components";
-import EditIngredientModal from "components/EditIngredientModal";
-import useIngredient from "hooks/useIngredient";
+import { EditIngredientModal, Header, PageContent } from "components";
+import { useIngredient } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import { useRouter } from "next/router";

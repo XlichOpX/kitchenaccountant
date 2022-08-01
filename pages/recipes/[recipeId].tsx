@@ -11,9 +11,8 @@ import {
   Space,
   Statistic,
 } from "antd";
-import { Header, PageContent } from "components";
-import EditRecipeModal from "components/EditRecipeModal";
-import useRecipe from "hooks/useRecipe";
+import { EditRecipeModal, Header, PageContent } from "components";
+import { useRecipe } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";

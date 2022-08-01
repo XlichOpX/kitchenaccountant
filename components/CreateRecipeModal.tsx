@@ -11,9 +11,7 @@ import {
   Row,
   Select,
 } from "antd";
-import useCollection from "hooks/useCollection";
-import useIngredients from "hooks/useIngredients";
-import useRecipes from "hooks/useRecipes";
+import { useCollection, useIngredients, useRecipes } from "hooks";
 import { useState } from "react";
 import { CreateRecipeOptions } from "services/collections";
 
