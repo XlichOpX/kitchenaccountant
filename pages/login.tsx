@@ -100,12 +100,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 async function signInWithGoogle() {
-  const { user, session, error } = await supabaseClient.auth.signIn(
+  await supabaseClient.auth.signIn(
     {
       provider: "google",
     },
     {
-      redirectTo: `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/redirecting`,
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/redirecting`,
     }
   );
 }
