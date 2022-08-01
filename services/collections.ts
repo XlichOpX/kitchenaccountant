@@ -73,6 +73,7 @@ export interface CreateRecipeOptions {
   collection_id: number;
   user_id: string;
   ingredients: { ingredient_id: number; units: number }[];
+  profit_percentage: number;
 }
 
 export interface Collection {

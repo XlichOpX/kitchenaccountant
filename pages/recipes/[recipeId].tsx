@@ -9,6 +9,7 @@ import {
   Statistic,
 } from "antd";
 import { Header, PageContent } from "components";
+import EditRecipeModal from "components/EditRecipeModal";
 import useRecipe from "hooks/useRecipe";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
@@ -21,7 +22,7 @@ const { confirm } = Modal;
 const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
   recipeId,
 }) => {
-  const { recipe, deleteRecipe } = useRecipe(Number(recipeId));
+  const { recipe, deleteRecipe, updateRecipe } = useRecipe(recipeId);
   const router = useRouter();
 
   if (!recipe) return null;
@@ -41,8 +42,9 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
         <PageHeader
           title={recipe.name}
           extra={[
+            <EditRecipeModal key={1} recipe={recipe} onUpdate={updateRecipe} />,
             <Button
-              key={1}
+              key={2}
               danger
               onClick={() =>
                 confirm({

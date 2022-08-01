@@ -1,4 +1,8 @@
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EditFilled,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import {
   Alert,
   Button,
@@ -10,42 +14,59 @@ import {
   Row,
   Select,
 } from "antd";
-import useCollection from "hooks/useCollection";
 import useIngredients from "hooks/useIngredients";
-import { useState } from "react";
-import { CreateRecipeOptions } from "services/collections";
-
+import { useEffect, useState } from "react";
+import { Recipe, updateRecipe } from "services/recipes";
 const { Option } = Select;
 
-const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
+const EditRecipeModal = ({
+  recipe,
+  onUpdate,
+}: {
+  recipe: Recipe;
+  onUpdate: typeof updateRecipe;
+}) => {
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState<string>();
   const [form] = Form.useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { addRecipe } = useCollection(collectionId);
   const { ingredients } = useIngredients();
+  const [deletedIngredients, setDeletedIngredients] = useState<number[]>([]);
 
-  const handleCancel = () => {
+  useEffect(() => {
+    form.setFieldsValue({
+      name: recipe.name,
+      description: recipe.description,
+      profit_percentage: recipe.profit_percentage * 100,
+      ingredients: recipe.ingredients.map(
+        ({ ingredient: { id: ingredient_id }, units, id }) => ({
+          id,
+          ingredient_id,
+          units,
+        })
+      ),
+    });
+  }, [recipe, form]);
+
+  const closeModal = () => {
     setVisible(false);
+    setDeletedIngredients([]);
   };
 
-  const onFinish = async (recipe: CreateRecipeOptions) => {
+  const onFinish = async (recipeData: Recipe) => {
     setIsSubmitting(true);
-
     try {
-      await addRecipe({
-        ...recipe,
-        collection_id: collectionId,
-        profit_percentage: recipe.profit_percentage / 100,
-      });
-
-      setVisible(false);
-      setError(undefined);
-      form.resetFields();
+      await onUpdate(
+        {
+          ...recipeData,
+          id: recipe.id,
+          profit_percentage: recipeData.profit_percentage / 100,
+        },
+        deletedIngredients
+      );
+      closeModal();
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      }
+      if (error instanceof Error) setError(error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -54,31 +75,30 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
   return (
     <>
       <Button
-        icon={<PlusOutlined />}
+        icon={<EditFilled />}
         onClick={() => setVisible(true)}
         type="primary"
       >
-        Crear receta
+        Editar receta
       </Button>
 
       <Modal
-        title="Crear receta"
+        title="Editar receta"
         visible={visible}
-        onCancel={handleCancel}
-        okButtonProps={{ htmlType: "submit", form: "create-recipe-form" }}
-        okText="Crear"
+        onCancel={closeModal}
+        okButtonProps={{ htmlType: "submit", form: "edit-recipe-form" }}
+        okText="Guardar cambios"
         cancelText="Cancelar"
         confirmLoading={isSubmitting}
       >
         {error && <Alert type="error" message={error} className="mb-3" />}
 
         <Form
-          name="create-recipe"
+          name="edit-recipe"
           layout="vertical"
-          id="create-recipe-form"
+          id="edit-recipe-form"
           onFinish={onFinish}
           form={form}
-          initialValues={{ profit_percentage: 90 }}
         >
           <Row gutter={16}>
             <Col xs={18}>
@@ -124,15 +144,11 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
             rules={[
               {
                 validator: async (_, ingredients) => {
-                  if (!ingredients || ingredients.length < 1) {
-                    return Promise.reject(
-                      new Error("Agregue al menos un ingrediente")
-                    );
-                  }
+                  if (!ingredients || ingredients.length < 1)
+                    throw new Error("Debe agregar al menos un ingrediente");
                 },
               },
             ]}
-            initialValue={[{}]}
           >
             {(fields, { add, remove }, { errors }) => (
               <>
@@ -178,18 +194,25 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
                         </Input.Group>
                       </Col>
 
-                      {index > 0 && (
-                        <Col span={4}>
-                          <Button
-                            htmlType="button"
-                            type="dashed"
-                            shape="circle"
-                            icon={<MinusCircleOutlined />}
-                            danger
-                            onClick={() => remove(name)}
-                          />
-                        </Col>
-                      )}
+                      <Col span={4}>
+                        <Button
+                          htmlType="button"
+                          type="dashed"
+                          shape="circle"
+                          icon={<MinusCircleOutlined />}
+                          danger
+                          onClick={() => {
+                            const { id } = form.getFieldValue([
+                              "ingredients",
+                              name,
+                            ]);
+                            if (id) {
+                              setDeletedIngredients((prev) => [...prev, id]);
+                            }
+                            remove(name);
+                          }}
+                        />
+                      </Col>
                     </Row>
                   </Form.Item>
                 ))}
@@ -214,4 +237,4 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
   );
 };
 
-export default CreateRecipeModal;
+export default EditRecipeModal;
