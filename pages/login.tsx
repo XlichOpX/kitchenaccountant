@@ -8,12 +8,12 @@ import { ApiError, UserCredentials } from "@supabase/supabase-js";
 import { Alert, Button, Form, Input, Space, Typography } from "antd";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import logo from "public/color-logo.svg";
 import { useState } from "react";
 import getTitle from "utils/getTitle";
-import Image from "next/image";
-import logo from "public/color-logo.svg";
 
 const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
@@ -104,6 +104,8 @@ async function signInWithGoogle() {
     {
       provider: "google",
     },
-    { redirectTo: `${process.env.NEXT_PUBLIC_VERCEL_URL}/redirecting` }
+    {
+      redirectTo: `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/redirecting`,
+    }
   );
 }
