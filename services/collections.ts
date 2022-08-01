@@ -60,6 +60,18 @@ export const createRecipe = async ({
   throw new Error(error.message);
 };
 
+export const deleteCollection = async (collectionId: number) => {
+  const { error } = await supabaseClient
+    .from("collections")
+    .delete()
+    .eq("id", collectionId);
+
+  if (!error) {
+    return true;
+  }
+  throw new Error("Ocurrió un error al eliminar la colección");
+};
+
 export interface Recipe {
   id: number;
   created_at: string;

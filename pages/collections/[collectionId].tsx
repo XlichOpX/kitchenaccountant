@@ -1,20 +1,31 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { Card, List, PageHeader, Space } from "antd";
-import { CreateRecipeModal, PageContent, Header } from "components";
+import {
+  Button,
+  Card,
+  List,
+  message,
+  Modal,
+  PageHeader,
+  Row,
+  Space,
+} from "antd";
+import { CreateRecipeModal, Header, PageContent } from "components";
 import useCollection from "hooks/useCollection";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app";
 import getTitle from "utils/getTitle";
-import { Typography } from "antd";
 
-const { Paragraph, Title } = Typography;
+const { confirm } = Modal;
 
 const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
   collectionId,
 }) => {
-  const { collection } = useCollection(collectionId);
+  const { collection, deleteCollection } = useCollection(collectionId);
+  const router = useRouter();
 
   if (!collection) return null;
 
@@ -47,9 +58,7 @@ const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
               <List.Item>
                 <Link href={`/recipes/${recipe.id}`}>
                   <a>
-                    <Card title={recipe.name} hoverable>
-                      {recipe.description}
-                    </Card>
+                    <Card hoverable>{recipe.name}</Card>
                   </a>
                 </Link>
               </List.Item>
@@ -61,6 +70,37 @@ const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
               <p>{collection.description}</p>
             </Card>
           )}
+
+          <Card title="Eliminar colección">
+            <p>
+              Elimina a su vez todas las recetas asociadas. Tenga en cuenta que
+              esta acción no se puede deshacer.
+            </p>
+            <Button
+              danger
+              icon={<CloseOutlined />}
+              onClick={() =>
+                confirm({
+                  title: `¿Está seguro de eliminar la colleción "${collection.name}"?`,
+                  okText: "Sí, eliminar",
+                  okButtonProps: { danger: true },
+                  cancelText: "Cancelar",
+                  onOk: async () => {
+                    try {
+                      await deleteCollection();
+                      router.replace("/collections");
+                    } catch (error) {
+                      if (error instanceof Error) {
+                        message.error(error.message);
+                      }
+                    }
+                  },
+                })
+              }
+            >
+              Eliminar
+            </Button>
+          </Card>
         </Space>
       </PageContent>
     </>
