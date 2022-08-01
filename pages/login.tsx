@@ -1,7 +1,11 @@
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  GoogleCircleFilled,
+  LockOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { getUser, supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { ApiError, UserCredentials } from "@supabase/supabase-js";
-import { Alert, Button, Form, Input, Typography } from "antd";
+import { Alert, Button, Form, Input, Space, Typography } from "antd";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -72,13 +76,17 @@ const Login: NextPage = () => {
         <Button type="primary" htmlType="submit" block disabled={isSubmitting}>
           Iniciar sesión
         </Button>
-
-        <Link href="/signup">
-          <a className="block mt-5 text-center">
-            ¿No tienes cuenta? Registrarse
-          </a>
-        </Link>
       </Form>
+
+      <Space direction="vertical" className="flex mt-3">
+        <Button icon={<GoogleCircleFilled />} block onClick={signInWithGoogle}>
+          Iniciar sesión con Google
+        </Button>
+      </Space>
+
+      <Link href="/signup">
+        <a className="block mt-5 text-center">¿No tienes cuenta? Registrarse</a>
+      </Link>
     </div>
   );
 };
@@ -90,3 +98,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (user) return { redirect: { destination: "/", permanent: false } };
   return { props: {} };
 };
+
+async function signInWithGoogle() {
+  const { user, session, error } = await supabaseClient.auth.signIn(
+    {
+      provider: "google",
+    },
+    { redirectTo: `${process.env.NEXT_PUBLIC_VERCEL_URL}/redirecting` }
+  );
+}
