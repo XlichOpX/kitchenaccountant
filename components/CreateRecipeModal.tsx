@@ -3,6 +3,7 @@ import {
   Alert,
   Button,
   Col,
+  Divider,
   Form,
   Input,
   InputNumber,
@@ -12,6 +13,7 @@ import {
 } from "antd";
 import useCollection from "hooks/useCollection";
 import useIngredients from "hooks/useIngredients";
+import useRecipes from "hooks/useRecipes";
 import { useState } from "react";
 import { CreateRecipeOptions } from "services/collections";
 
@@ -24,24 +26,23 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addRecipe } = useCollection(collectionId);
   const { ingredients } = useIngredients();
+  const { recipes = [] } = useRecipes();
 
-  const handleCancel = () => {
+  const closeModal = () => {
     setVisible(false);
+    setError(undefined);
+    form.resetFields();
   };
 
   const onFinish = async (recipe: CreateRecipeOptions) => {
     setIsSubmitting(true);
-
     try {
       await addRecipe({
         ...recipe,
         collection_id: collectionId,
         profit_percentage: recipe.profit_percentage / 100,
       });
-
-      setVisible(false);
-      setError(undefined);
-      form.resetFields();
+      closeModal();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -64,7 +65,7 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
       <Modal
         title="Crear receta"
         visible={visible}
-        onCancel={handleCancel}
+        onCancel={closeModal}
         okButtonProps={{ htmlType: "submit", form: "create-recipe-form" }}
         okText="Crear"
         cancelText="Cancelar"
@@ -202,6 +203,78 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
                     className="w-full"
                   >
                     Agregar ingrediente
+                  </Button>
+                  <Form.ErrorList errors={errors} />
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+
+          <Divider />
+
+          <Form.List name="subrecipes">
+            {(fields, { add, remove }, { errors }) => (
+              <>
+                {fields.map(({ key, name, ...rest }, index) => (
+                  <Form.Item
+                    key={key}
+                    label={index === 0 ? "Recetas base" : undefined}
+                  >
+                    <Row gutter={14}>
+                      <Col span={20}>
+                        <Input.Group compact>
+                          <Form.Item
+                            {...rest}
+                            name={[name, "subrecipe_id"]}
+                            className="mb-0 w-1/2"
+                            rules={[{ required: true }]}
+                          >
+                            <Select placeholder="Receta">
+                              {recipes.map((recipe) => (
+                                <Option key={recipe.id} value={recipe.id}>
+                                  {recipe.name}
+                                </Option>
+                              ))}
+                            </Select>
+                          </Form.Item>
+
+                          <Form.Item
+                            {...rest}
+                            name={[name, "units"]}
+                            className="mb-0 w-1/2"
+                            rules={[{ required: true }]}
+                          >
+                            <InputNumber
+                              placeholder="Cantidad"
+                              className="w-full"
+                              decimalSeparator=","
+                            />
+                          </Form.Item>
+                        </Input.Group>
+                      </Col>
+
+                      <Col span={4}>
+                        <Button
+                          htmlType="button"
+                          type="dashed"
+                          shape="circle"
+                          icon={<MinusCircleOutlined />}
+                          danger
+                          onClick={() => remove(name)}
+                        />
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                ))}
+
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    icon={<PlusOutlined />}
+                    className="w-full"
+                  >
+                    Agregar receta base
                   </Button>
                   <Form.ErrorList errors={errors} />
                 </Form.Item>

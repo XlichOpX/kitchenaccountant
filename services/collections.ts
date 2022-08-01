@@ -40,24 +40,24 @@ export const getCollection = async (collectionId: number) => {
 
 export const createRecipe = async ({
   ingredients,
+  subrecipes,
   ...recipe
 }: CreateRecipeOptions) => {
-  const { data: newRecipe, error } = await supabaseClient
+  const { data: newRecipe, error: recipeError } = await supabaseClient
     .from("recipes")
     .insert(recipe);
 
-  if (!error) {
-    const { error } = await supabaseClient.from("recipe_ingredients").insert(
-      ingredients.map((i) => ({ ...i, recipe_id: newRecipe[0].id })),
-      { returning: "minimal" }
-    );
+  if (recipeError) throw new Error(recipeError.message);
 
-    if (!error) {
-      return true;
-    }
-    throw new Error(error.message);
-  }
-  throw new Error(error.message);
+  await supabaseClient.from("recipe_ingredients").insert(
+    ingredients.map((i) => ({ ...i, recipe_id: newRecipe[0].id })),
+    { returning: "minimal" }
+  );
+
+  await supabaseClient.from("recipe_subrecipes").insert(
+    subrecipes.map((s) => ({ ...s, recipe_id: newRecipe[0].id })),
+    { returning: "minimal" }
+  );
 };
 
 export const deleteCollection = async (collectionId: number) => {
@@ -85,6 +85,7 @@ export interface CreateRecipeOptions {
   collection_id: number;
   user_id: string;
   ingredients: { ingredient_id: number; units: number }[];
+  subrecipes: { subrecipe_id: number; units: number }[];
   profit_percentage: number;
 }
 

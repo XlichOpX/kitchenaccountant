@@ -2,9 +2,11 @@ import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
+  Col,
   message,
   Modal,
   PageHeader,
+  Row,
   Space,
   Statistic,
 } from "antd";
@@ -13,8 +15,11 @@ import EditRecipeModal from "components/EditRecipeModal";
 import useRecipe from "hooks/useRecipe";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "pages/_app";
+import { RecipeIngredient, Subrecipe } from "services/recipes";
+import formatNumber from "utils/formatNumber";
 import getTitle from "utils/getTitle";
 
 const { confirm } = Modal;
@@ -27,10 +32,9 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
 
   if (!recipe) return null;
 
-  const recipeCost = recipe.ingredients.reduce(
-    (acc, { ingredient: { unit_price }, units }) => acc + unit_price * units,
-    0
-  );
+  const recipeCost =
+    getIngredientsCost(recipe.ingredients) +
+    getSubrecipesCost(recipe.subrecipes);
 
   return (
     <>
@@ -71,16 +75,41 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
 
       <PageContent>
         <Space direction="vertical" size="large" className="flex">
-          <Card title="Ingredientes">
-            <ul>
-              {recipe.ingredients.map(({ ingredient, units }) => (
-                <li key={ingredient.id}>
-                  {ingredient.name} - {units}{" "}
-                  {ingredient.measurement_unit.symbol}
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <Row gutter={16}>
+            {recipe.subrecipes.length > 0 && (
+              <Col md={12}>
+                <Card title="Recetas base">
+                  <ul>
+                    {recipe.subrecipes.map(({ id, recipe, units }) => (
+                      <li key={id}>
+                        <Link href={`/recipes/${recipe.id}`}>
+                          {recipe.name}
+                        </Link>{" "}
+                        - {units} u ={" "}
+                        {formatNumber(
+                          getIngredientsCost(recipe.ingredients) * units
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              </Col>
+            )}
+
+            <Col md={12}>
+              <Card title="Ingredientes">
+                <ul>
+                  {recipe.ingredients.map(({ ingredient, units }) => (
+                    <li key={ingredient.id}>
+                      {ingredient.name} - {units}{" "}
+                      {ingredient.measurement_unit.symbol} ={" "}
+                      {formatNumber(units * ingredient.unit_price)}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </Col>
+          </Row>
 
           <Card title="Cálculos">
             <Space size="large">
@@ -93,6 +122,7 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
               <Statistic
                 title="Ganancia deseada"
                 value={`${recipe.profit_percentage * 100} %`}
+                precision={2}
               />
 
               <Statistic
@@ -125,3 +155,18 @@ export const getServerSideProps = withPageAuth({
     },
   }),
 });
+
+function getSubrecipesCost(subrecipes: Subrecipe[]) {
+  return subrecipes.reduce(
+    (acc, { units, recipe: { ingredients } }) =>
+      acc + getIngredientsCost(ingredients) * units,
+    0
+  );
+}
+
+function getIngredientsCost(ingredients: RecipeIngredient[]) {
+  return ingredients.reduce(
+    (acc, { ingredient: { unit_price }, units }) => acc + unit_price * units,
+    0
+  );
+}

@@ -12,13 +12,33 @@ export const getRecipe = async (id: number) => {
           id, name, price, unit_price, package_units, measurement_unit:measurement_unit_id ( id, name, symbol )
         ),
         units
-      )`
+      ),
+      subrecipes:recipe_subrecipes!recipe_subrecipes_recipe_id_fkey (
+        id,
+        units,
+        recipe:subrecipe_id (
+          id, name, ingredients:recipe_ingredients (
+            id, units, ingredient:ingredient_id ( id, name, price, unit_price, package_units, measurement_unit:measurement_unit_id ( id, name, symbol ) )
+          )
+        )
+      )
+      `
     )
     .eq("id", id);
 
   if (!error) return data[0] as Recipe;
 
   throw new Error(error.message);
+};
+
+export const getRecipes = async () => {
+  const { data, error } = await supabaseClient
+    .from("recipes")
+    .select("id, name, created_at");
+
+  if (!error) {
+    return data as ListRecipe[];
+  }
 };
 
 export const deleteRecipe = async (recipeId: number) => {
@@ -78,6 +98,12 @@ export const updateRecipe = async (
     throw new Error("Ocurrió un error al guardar los cambios");
 };
 
+export interface ListRecipe {
+  id: number;
+  name: string;
+  created_at: string;
+}
+
 export interface Recipe {
   id: number;
   created_at: string;
@@ -86,6 +112,17 @@ export interface Recipe {
   collection_id: number;
   description?: string;
   ingredients: RecipeIngredient[];
+  subrecipes: Subrecipe[];
+}
+
+export interface Subrecipe {
+  id: number;
+  recipe: {
+    id: number;
+    name: string;
+    ingredients: RecipeIngredient[];
+  };
+  units: number;
 }
 
 export interface RecipeIngredient {
