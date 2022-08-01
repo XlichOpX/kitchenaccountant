@@ -1,0 +1,15 @@
+<svg width="48mm" height="48mm" version="1.1" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(-62.445 -114.02)">
+<g transform="matrix(.32055 0 0 .32055 165.5 134.14)">
+<circle cx="-246.61" cy="12.078" r="74.871" stroke-width=".26458"/>
+<g transform="translate(-339.53 -127.41)">
+<g transform="translate(5.6232)" fill="#fff">
+<path transform="matrix(.44226 0 0 .55232 37.285 63.596)" d="m107.94 95.065h5.1417v154.71h-9.8908zm10.283 0h-5.1417v154.71h9.8908z" stroke-width=".26458"/>
+<path d="m97.518 112.89c0 5.7963-4.5756 10.495-10.22 10.495-5.6442 0-10.22-4.6988-10.22-10.495 0-5.7963 4.5756-1.9157 10.22-1.9157 5.6442 0 10.22-3.8806 10.22 1.9157z" stroke-width=".19339"/>
+<path transform="matrix(.26891 0 0 .70409 52.031 50.051)" d="m103.25 38.883s3.343 44.928 10.204 44.928 17.694-44.928 17.694-44.928v50.365s-38.052 4.9686-38.004 0c0.29204-30.46 10.105-50.365 10.105-50.365zm55.798 0s-3.343 44.928-10.204 44.928-17.694-44.928-17.694-44.928v50.365s38.052 4.9686 38.004 0c-0.29204-30.46-10.105-50.365-10.105-50.365z" stroke-width=".45204"/>
+</g>
+<text transform="matrix(0 -1.0134 .98679 0 0 0)" x="-179.86783" y="129.4604" fill="#ffffff" font-family="Amiri" font-size="114.56px" stroke-width="2.8639" style="line-height:1.25" xml:space="preserve"><tspan x="-179.86783" y="129.4604" fill="#ffffff" font-family="Amiri" stroke-width="2.8639">$</tspan></text>
+</g>
+</g>
+</g>
+</svg>

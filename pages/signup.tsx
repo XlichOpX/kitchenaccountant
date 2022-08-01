@@ -8,6 +8,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import getTitle from "utils/getTitle";
+import Image from "next/image";
+import logo from "public/color-logo.svg";
+
+const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
 const SignUp: NextPage = () => {
   const router = useRouter();
@@ -34,10 +38,14 @@ const SignUp: NextPage = () => {
       </Head>
 
       <header>
+        <div className="text-center">
+          <Image src={logo} alt="KitchenAccountant logo" />
+        </div>
+
         <Typography.Title className="text-center">
-          Registrarse
+          <span className="text-xl">{appName}</span>
           <br />
-          <span className="text-xl">Recipe Cost Calculator</span>
+          Registrarse
         </Typography.Title>
       </header>
 
@@ -76,6 +84,7 @@ const SignUp: NextPage = () => {
               },
             }),
           ]}
+          dependencies={["password"]}
         >
           <Input.Password
             prefix={<LockOutlined />}

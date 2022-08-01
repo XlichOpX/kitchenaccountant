@@ -8,6 +8,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import getTitle from "utils/getTitle";
+import Image from "next/image";
+import logo from "public/color-logo.svg";
+
+const appName = process.env.NEXT_PUBLIC_APP_NAME;
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -34,10 +38,14 @@ const Login: NextPage = () => {
       </Head>
 
       <header>
+        <div className="text-center">
+          <Image src={logo} alt="KitchenAccountant logo" />
+        </div>
+
         <Typography.Title className="text-center">
-          Iniciar sesión
+          <span className="text-xl">{appName}</span>
           <br />
-          <span className="text-xl">Recipe Cost Calculator</span>
+          Iniciar sesión
         </Typography.Title>
       </header>
 

@@ -1,3 +1,3 @@
 export default function getTitle(title: string) {
-  return title + " | KitchenAccountant";
+  return title + ` | ${process.env.NEXT_PUBLIC_APP_NAME}`;
 }
