@@ -56,4 +56,4 @@ Collections.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
 export default Collections;
 
-export const getServerSideProps = withPageAuth();
+export const getServerSideProps = withPageAuth({ redirectTo: "/login" });

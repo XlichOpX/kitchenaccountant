@@ -117,4 +117,5 @@ export const getServerSideProps = withPageAuth({
       collectionId: Number(ctx.query.collectionId),
     },
   }),
+  redirectTo: "/login",
 });

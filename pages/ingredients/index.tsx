@@ -60,4 +60,4 @@ Ingredients.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
 export default Ingredients;
 
-export const getServerSideProps = withPageAuth();
+export const getServerSideProps = withPageAuth({ redirectTo: "/login" });

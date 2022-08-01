@@ -97,4 +97,5 @@ export const getServerSideProps = withPageAuth({
       ingredientId: Number(ctx.query.ingredientId),
     },
   }),
+  redirectTo: "/login",
 });

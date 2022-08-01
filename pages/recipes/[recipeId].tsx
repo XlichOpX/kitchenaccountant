@@ -160,6 +160,7 @@ export const getServerSideProps = withPageAuth({
       recipeId: Number(ctx.query.recipeId),
     },
   }),
+  redirectTo: "/login",
 });
 
 function getSubrecipesCost(subrecipes: Subrecipe[]) {
