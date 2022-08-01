@@ -20,13 +20,14 @@ const useCollection = (collectionId: number) => {
     async (recipe: CreateRecipeOptions) => {
       if (!user) return;
       try {
-        await createRecipe({
+        const newRecipeId = await createRecipe({
           ...recipe,
           collection_id: collectionId,
           user_id: user.id,
         });
         mutate(`collections/${collectionId}`);
         mutate("recipes");
+        return newRecipeId;
       } catch (error) {
         throw error;
       }

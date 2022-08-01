@@ -49,15 +49,19 @@ export const createRecipe = async ({
 
   if (recipeError) throw new Error(recipeError.message);
 
+  const recipeId = newRecipe[0].id;
+
   await supabaseClient.from("recipe_ingredients").insert(
-    ingredients.map((i) => ({ ...i, recipe_id: newRecipe[0].id })),
+    ingredients.map((i) => ({ ...i, recipe_id: recipeId })),
     { returning: "minimal" }
   );
 
   await supabaseClient.from("recipe_subrecipes").insert(
-    subrecipes.map((s) => ({ ...s, recipe_id: newRecipe[0].id })),
+    subrecipes.map((s) => ({ ...s, recipe_id: recipeId })),
     { returning: "minimal" }
   );
+
+  return recipeId;
 };
 
 export const deleteCollection = async (collectionId: number) => {

@@ -1,6 +1,6 @@
 import { useUser } from "@supabase/auth-helpers-react";
 import { Button } from "antd";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
@@ -18,3 +18,12 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    redirect: {
+      destination: "/collections",
+      permanent: false,
+    },
+  };
+};

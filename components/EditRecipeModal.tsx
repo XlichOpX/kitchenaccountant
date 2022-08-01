@@ -7,6 +7,7 @@ import {
   Alert,
   Button,
   Col,
+  Divider,
   Form,
   Input,
   InputNumber,
@@ -240,6 +241,8 @@ const EditRecipeModal = ({
               </>
             )}
           </Form.List>
+
+          <Divider />
 
           <Form.List name="subrecipes">
             {(fields, { add, remove }, { errors }) => (

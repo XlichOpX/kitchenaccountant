@@ -29,39 +29,12 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
       <Header>
         <PageHeader
           title={ingredient.name}
-          extra={[
-            <EditIngredientModal key={1} ingredient={ingredient} />,
-            <Button
-              key={2}
-              icon={<CloseOutlined />}
-              danger
-              onClick={() =>
-                confirm({
-                  title: "¿Está seguro de eliminar este ingrediente?",
-                  okText: "Sí, eliminar",
-                  okButtonProps: { danger: true },
-                  cancelText: "Cancelar",
-                  onOk: async () => {
-                    try {
-                      await deleteIngredient(ingredient.id);
-                      router.replace("/ingredients");
-                    } catch (error) {
-                      if (error instanceof Error) {
-                        message.error(error.message);
-                      }
-                    }
-                  },
-                })
-              }
-            >
-              Eliminar
-            </Button>,
-          ]}
+          extra={[<EditIngredientModal key={1} ingredient={ingredient} />, ,]}
         />
       </Header>
 
       <PageContent>
-        <Card title="Datos del ingrediente">
+        <Card title="Datos del ingrediente" className="mb-5">
           <Descriptions>
             <Descriptions.Item label="Nombre">
               {ingredient.name}
@@ -79,6 +52,35 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
               {ingredient.measurement_unit.symbol}
             </Descriptions.Item>
           </Descriptions>
+        </Card>
+
+        <Card title="Eliminar ingrediente">
+          <p>Tenga en cuenta que esta acción no se puede deshacer.</p>
+
+          <Button
+            icon={<CloseOutlined />}
+            danger
+            onClick={() =>
+              confirm({
+                title: "¿Está seguro de eliminar este ingrediente?",
+                okText: "Sí, eliminar",
+                okButtonProps: { danger: true },
+                cancelText: "Cancelar",
+                onOk: async () => {
+                  try {
+                    await deleteIngredient(ingredient.id);
+                    router.replace("/ingredients");
+                  } catch (error) {
+                    if (error instanceof Error) {
+                      message.error(error.message);
+                    }
+                  }
+                },
+              })
+            }
+          >
+            Eliminar
+          </Button>
         </Card>
       </PageContent>
     </>

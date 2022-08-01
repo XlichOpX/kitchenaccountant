@@ -12,6 +12,7 @@ import {
   Select,
 } from "antd";
 import { useCollection, useIngredients, useRecipes } from "hooks";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { CreateRecipeOptions } from "services/collections";
 
@@ -25,6 +26,7 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
   const { addRecipe } = useCollection(collectionId);
   const { ingredients } = useIngredients();
   const { recipes = [] } = useRecipes();
+  const router = useRouter();
 
   const closeModal = () => {
     setVisible(false);
@@ -35,12 +37,13 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
   const onFinish = async (recipe: CreateRecipeOptions) => {
     setIsSubmitting(true);
     try {
-      await addRecipe({
+      const newRecipeId = await addRecipe({
         ...recipe,
         collection_id: collectionId,
         profit_percentage: recipe.profit_percentage / 100,
       });
       closeModal();
+      router.push(`/recipes/${newRecipeId}`);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
