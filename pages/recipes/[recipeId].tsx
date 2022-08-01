@@ -1,3 +1,4 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
@@ -47,37 +48,15 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
           title={recipe.name}
           extra={[
             <EditRecipeModal key={1} recipe={recipe} onUpdate={updateRecipe} />,
-            <Button
-              key={2}
-              danger
-              onClick={() =>
-                confirm({
-                  title: `¿Está seguro de eliminar la receta "${recipe.name}"?`,
-                  okText: "Sí, eliminar",
-                  cancelText: "Cancelar",
-                  onOk: async () => {
-                    try {
-                      await deleteRecipe();
-                      router.replace(`/collections/${recipe.collection_id}`);
-                    } catch (error) {
-                      if (error instanceof Error)
-                        message.error({ content: error.message });
-                    }
-                  },
-                })
-              }
-            >
-              Eliminar
-            </Button>,
           ]}
         />
       </Header>
 
       <PageContent>
         <Space direction="vertical" size="large" className="flex">
-          <Row gutter={16}>
+          <Row gutter={[16, 16]}>
             {recipe.subrecipes.length > 0 && (
-              <Col md={12}>
+              <Col xs={24} md={12}>
                 <Card title="Recetas base">
                   <ul>
                     {recipe.subrecipes.map(({ id, recipe, units }) => (
@@ -96,7 +75,7 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
               </Col>
             )}
 
-            <Col md={12}>
+            <Col xs={24} md={12}>
               <Card title="Ingredientes">
                 <ul>
                   {recipe.ingredients.map(({ ingredient, units }) => (
@@ -138,6 +117,34 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
               <p>{recipe.description}</p>
             </Card>
           )}
+
+          <Card title="Eliminar receta">
+            <p>Tenga en cuenta que esta acción no se puede deshacer.</p>
+
+            <Button
+              danger
+              icon={<CloseOutlined />}
+              onClick={() =>
+                confirm({
+                  title: `¿Está seguro de eliminar la receta "${recipe.name}"?`,
+                  okText: "Sí, eliminar",
+                  okButtonProps: { danger: true },
+                  cancelText: "Cancelar",
+                  onOk: async () => {
+                    try {
+                      await deleteRecipe();
+                      router.replace(`/collections/${recipe.collection_id}`);
+                    } catch (error) {
+                      if (error instanceof Error)
+                        message.error({ content: error.message });
+                    }
+                  },
+                })
+              }
+            >
+              Eliminar
+            </Button>
+          </Card>
         </Space>
       </PageContent>
     </>

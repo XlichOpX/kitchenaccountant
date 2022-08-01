@@ -23,8 +23,8 @@ const useRecipe = (id: number) => {
   }, [id]);
 
   const updateRecipe: typeof svUpdateRecipe = useCallback(
-    async (recipe, deletedIngredients) => {
-      await svUpdateRecipe(recipe, deletedIngredients);
+    async (recipe, deletedIngredients, deletedSubrecipes) => {
+      await svUpdateRecipe(recipe, deletedIngredients, deletedSubrecipes);
       await mutate(`recipes/${id}`);
     },
     [mutate, id]

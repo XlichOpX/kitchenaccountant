@@ -15,6 +15,7 @@ import {
   Select,
 } from "antd";
 import useIngredients from "hooks/useIngredients";
+import useRecipes from "hooks/useRecipes";
 import { useEffect, useState } from "react";
 import { Recipe, updateRecipe } from "services/recipes";
 const { Option } = Select;
@@ -31,7 +32,9 @@ const EditRecipeModal = ({
   const [form] = Form.useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { ingredients } = useIngredients();
+  const { recipes = [] } = useRecipes();
   const [deletedIngredients, setDeletedIngredients] = useState<number[]>([]);
+  const [deletedSubrecipes, setDeletedSubrecipes] = useState<number[]>([]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -45,12 +48,18 @@ const EditRecipeModal = ({
           units,
         })
       ),
+      subrecipes: recipe.subrecipes.map(({ id, recipe, units }) => ({
+        id,
+        subrecipe_id: recipe.id,
+        units,
+      })),
     });
   }, [recipe, form]);
 
   const closeModal = () => {
     setVisible(false);
     setDeletedIngredients([]);
+    setDeletedSubrecipes([]);
   };
 
   const onFinish = async (recipeData: Recipe) => {
@@ -62,7 +71,8 @@ const EditRecipeModal = ({
           id: recipe.id,
           profit_percentage: recipeData.profit_percentage / 100,
         },
-        deletedIngredients
+        deletedIngredients,
+        deletedSubrecipes
       );
       closeModal();
     } catch (error) {
@@ -79,7 +89,7 @@ const EditRecipeModal = ({
         onClick={() => setVisible(true)}
         type="primary"
       >
-        Editar receta
+        Editar
       </Button>
 
       <Modal
@@ -225,6 +235,85 @@ const EditRecipeModal = ({
                     className="w-full"
                   >
                     Agregar ingrediente
+                  </Button>
+                  <Form.ErrorList errors={errors} />
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+
+          <Form.List name="subrecipes">
+            {(fields, { add, remove }, { errors }) => (
+              <>
+                {fields.map(({ key, name, ...rest }, index) => (
+                  <Form.Item
+                    key={key}
+                    label={index === 0 ? "Recetas base" : undefined}
+                  >
+                    <Row gutter={14}>
+                      <Col span={20}>
+                        <Input.Group compact>
+                          <Form.Item
+                            {...rest}
+                            name={[name, "subrecipe_id"]}
+                            className="mb-0 w-1/2"
+                            rules={[{ required: true }]}
+                          >
+                            <Select placeholder="Receta">
+                              {recipes.map((recipe) => (
+                                <Option key={recipe.id} value={recipe.id}>
+                                  {recipe.name}
+                                </Option>
+                              ))}
+                            </Select>
+                          </Form.Item>
+
+                          <Form.Item
+                            {...rest}
+                            name={[name, "units"]}
+                            className="mb-0 w-1/2"
+                            rules={[{ required: true }]}
+                          >
+                            <InputNumber
+                              placeholder="Cantidad"
+                              className="w-full"
+                              decimalSeparator=","
+                            />
+                          </Form.Item>
+                        </Input.Group>
+                      </Col>
+
+                      <Col span={4}>
+                        <Button
+                          htmlType="button"
+                          type="dashed"
+                          shape="circle"
+                          icon={<MinusCircleOutlined />}
+                          danger
+                          onClick={() => {
+                            const { id } = form.getFieldValue([
+                              "subrecipes",
+                              name,
+                            ]);
+                            if (id) {
+                              setDeletedSubrecipes((prev) => [...prev, id]);
+                            }
+                            remove(name);
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                ))}
+
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    icon={<PlusOutlined />}
+                    className="w-full"
+                  >
+                    Agregar receta base
                   </Button>
                   <Form.ErrorList errors={errors} />
                 </Form.Item>

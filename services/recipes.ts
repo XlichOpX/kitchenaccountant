@@ -49,20 +49,32 @@ export const deleteRecipe = async (recipeId: number) => {
 
   if (!error) return data[0] as Recipe;
 
+  if (error.code === "23503")
+    throw new Error("La receta está siendo usada por otras recetas.");
+
   throw new Error(error.message);
 };
 
 export const updateRecipe = async (
   recipe: Recipe,
-  deletedIngredients?: number[]
+  deletedIngredients?: number[],
+  deletedSubrecipes?: number[]
 ) => {
-  const { ingredients, id: recipeId, ...recipeInfo } = recipe;
+  const { ingredients, subrecipes, id: recipeId, ...recipeInfo } = recipe;
 
   const newIngredients = ingredients
     .filter(({ id }) => !id)
     .map((i) => ({ ...i, recipe_id: recipeId }));
 
   const updatedIngredients = ingredients
+    .filter(({ id }) => !!id)
+    .map((i) => ({ ...i, recipe_id: recipeId }));
+
+  const newSubrecipes = subrecipes
+    .filter(({ id }) => !id)
+    .map((i) => ({ ...i, recipe_id: recipeId }));
+
+  const updatedSubrecipes = subrecipes
     .filter(({ id }) => !!id)
     .map((i) => ({ ...i, recipe_id: recipeId }));
 
@@ -79,6 +91,14 @@ export const updateRecipe = async (
     .from("recipe_ingredients")
     .upsert(updatedIngredients, { returning: "minimal" });
 
+  const { error: newSubrecipesError } = await supabaseClient
+    .from("recipe_subrecipes")
+    .insert(newSubrecipes, { returning: "minimal" });
+
+  const { error: updatedSubrecipesError } = await supabaseClient
+    .from("recipe_subrecipes")
+    .upsert(updatedSubrecipes, { returning: "minimal" });
+
   let deletedIngredientsError;
   if (deletedIngredients) {
     deletedIngredientsError = (
@@ -89,11 +109,24 @@ export const updateRecipe = async (
     ).error;
   }
 
+  let deletedSubrecipesError;
+  if (deletedSubrecipes) {
+    deletedSubrecipesError = (
+      await supabaseClient
+        .from("recipe_subrecipes")
+        .delete({ returning: "minimal" })
+        .in("id", deletedSubrecipes)
+    ).error;
+  }
+
   if (
     recipeInfoError ||
     newIngredientsError ||
     updatedIngredientsError ||
-    deletedIngredientsError
+    newSubrecipesError ||
+    updatedSubrecipesError ||
+    deletedIngredientsError ||
+    deletedSubrecipesError
   )
     throw new Error("Ocurrió un error al guardar los cambios");
 };
