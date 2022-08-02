@@ -2,7 +2,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { Button, Card, Descriptions, message, Modal, PageHeader } from "antd";
 import { EditIngredientModal, Header, PageContent } from "components";
-import { useIngredient } from "hooks";
+import { useIngredient, useSettings } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -16,6 +16,7 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
   ingredientId,
 }) => {
   const { ingredient, deleteIngredient } = useIngredient(ingredientId);
+  const { settings } = useSettings();
   const router = useRouter();
 
   if (!ingredient) return null;
@@ -40,7 +41,7 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
               {ingredient.name}
             </Descriptions.Item>
             <Descriptions.Item label="Precio">
-              {ingredient.price}
+              {settings?.currency_symbol} {ingredient.price}
             </Descriptions.Item>
             <Descriptions.Item label="Unidades del paquete">
               {ingredient.package_units}

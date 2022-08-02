@@ -12,7 +12,7 @@ import {
   Statistic,
 } from "antd";
 import { EditRecipeModal, Header, PageContent } from "components";
-import { useRecipe } from "hooks";
+import { useRecipe, useSettings } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";
@@ -29,6 +29,7 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
 }) => {
   const { recipe, deleteRecipe, updateRecipe } = useRecipe(recipeId);
   const router = useRouter();
+  const { settings } = useSettings();
 
   if (!recipe) return null;
 
@@ -63,9 +64,10 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
                         <Link href={`/recipes/${recipe.id}`}>
                           {recipe.name}
                         </Link>{" "}
-                        - {units} u ={" "}
+                        - {units} u = {settings?.currency_symbol}{" "}
                         {formatNumber(
-                          getIngredientsCost(recipe.ingredients) * units
+                          getIngredientsCost(recipe.ingredients) * units,
+                          { maximumFractionDigits: 2 }
                         )}
                       </li>
                     ))}
@@ -81,7 +83,10 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
                     <li key={ingredient.id}>
                       {ingredient.name} - {units}{" "}
                       {ingredient.measurement_unit.symbol} ={" "}
-                      {formatNumber(units * ingredient.unit_price)}
+                      {settings?.currency_symbol}{" "}
+                      {formatNumber(units * ingredient.unit_price, {
+                        maximumFractionDigits: 2,
+                      })}
                     </li>
                   ))}
                 </ul>
@@ -94,12 +99,14 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
               <Statistic
                 title="Costo de la receta"
                 value={recipeCost}
+                prefix={settings?.currency_symbol}
                 precision={2}
               />
 
               <Statistic
                 title="Ganancia deseada"
-                value={`${recipe.profit_percentage * 100} %`}
+                value={recipe.profit_percentage * 100}
+                suffix="%"
                 precision={2}
               />
 
@@ -107,6 +114,7 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
                 title="Precio de venta sugerido"
                 value={recipeCost + recipeCost * recipe.profit_percentage}
                 precision={2}
+                prefix={settings?.currency_symbol}
               />
             </Space>
           </Card>

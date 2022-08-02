@@ -1,7 +1,7 @@
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { Card, List, PageHeader } from "antd";
 import { CreateIngredientModal, Header, PageContent } from "components";
-import { useIngredients } from "hooks";
+import { useIngredients, useSettings } from "hooks";
 import SidebarLayout from "layouts/SidebarLayout";
 import Head from "next/head";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import getTitle from "utils/getTitle";
 
 const Ingredients: NextPageWithLayout = () => {
   const { ingredients, error } = useIngredients();
+  const { settings } = useSettings();
 
   return (
     <>
@@ -40,7 +41,9 @@ const Ingredients: NextPageWithLayout = () => {
               <Link href={`/ingredients/${ingredient.id}`}>
                 <a>
                   <Card title={ingredient.name} hoverable>
-                    <p>Precio: {ingredient.price}</p>
+                    <p>
+                      Precio: {settings?.currency_symbol} {ingredient.price}
+                    </p>
                     <p>
                       Unidades: {ingredient.package_units}{" "}
                       {ingredient.measurement_unit.symbol}
