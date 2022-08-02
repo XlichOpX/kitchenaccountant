@@ -1,6 +1,7 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { UserProvider } from "@supabase/auth-helpers-react";
 import "antd/dist/antd.css";
+import { SettingsProvider } from "contexts/SettingsContext";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
@@ -19,7 +20,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return getLayout(
     <UserProvider supabaseClient={supabaseClient}>
-      <Component {...pageProps} />
+      <SettingsProvider>
+        <Component {...pageProps} />
+      </SettingsProvider>
     </UserProvider>
   );
 }

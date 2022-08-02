@@ -1,4 +1,4 @@
-import { BookFilled } from "@ant-design/icons";
+import { BookFilled, SettingFilled } from "@ant-design/icons";
 import { GiFlour } from "react-icons/gi";
 import { Button, Layout, Menu } from "antd";
 import { useRouter } from "next/router";
@@ -28,6 +28,11 @@ const SidebarLayout = ({ children }: { children: ReactNode }) => {
                 label: "Tus ingredientes",
                 key: "ingredients",
                 icon: <GiFlour />,
+              },
+              {
+                label: "Ajustes",
+                key: "settings",
+                icon: <SettingFilled />,
               },
             ]}
           />

@@ -5,3 +5,4 @@ export { default as useIngredients } from "./useIngredients";
 export { default as useMeasurementUnits } from "./useMeasurementUnits";
 export { default as useRecipe } from "./useRecipe";
 export { default as useRecipes } from "./useRecipes";
+export { default as useSettings } from "./useSettings";
