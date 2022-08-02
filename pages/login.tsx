@@ -73,7 +73,7 @@ const Login: NextPage = () => {
           <Input.Password prefix={<LockOutlined />} placeholder="Contraseña" />
         </Form.Item>
 
-        <Button type="primary" htmlType="submit" block disabled={isSubmitting}>
+        <Button type="primary" htmlType="submit" block loading={isSubmitting}>
           Iniciar sesión
         </Button>
       </Form>

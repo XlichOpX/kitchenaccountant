@@ -1,7 +1,7 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { getUser, supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { ApiError, UserCredentials } from "@supabase/supabase-js";
-import { Alert, Button, Form, Input, Typography } from "antd";
+import { Alert, Button, Form, Input, message, Typography } from "antd";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -25,6 +25,7 @@ const SignUp: NextPage = () => {
 
     if (!error) {
       router.push("/login");
+      message.info("Revise su correo electrónico para confirmar su cuenta");
       return;
     }
 
@@ -92,7 +93,7 @@ const SignUp: NextPage = () => {
           />
         </Form.Item>
 
-        <Button type="primary" htmlType="submit" block disabled={isSubmitting}>
+        <Button type="primary" htmlType="submit" block loading={isSubmitting}>
           Registrarse
         </Button>
 

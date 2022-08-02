@@ -47,7 +47,7 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
               {ingredient.package_units}
             </Descriptions.Item>
             <Descriptions.Item label="Precio por unidad">
-              {formatNumber(ingredient.unit_price)}
+              {settings?.currency_symbol} {formatNumber(ingredient.unit_price)}
             </Descriptions.Item>
             <Descriptions.Item label="Unidad de medida">
               {ingredient.measurement_unit.symbol}
