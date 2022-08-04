@@ -80,7 +80,13 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
           id="create-recipe-form"
           onFinish={onFinish}
           form={form}
-          initialValues={{ profit_percentage: 90 }}
+          initialValues={{
+            name: "",
+            profit_percentage: 90,
+            description: "",
+            ingredients: [],
+            subrecipes: [],
+          }}
         >
           <Row gutter={16}>
             <Col xs={18}>
@@ -152,14 +158,22 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
                             className="mb-0 w-1/2"
                             rules={[{ required: true }]}
                           >
-                            <Select placeholder="Ingrediente">
+                            <Select
+                              placeholder="Ingrediente"
+                              showSearch
+                              optionFilterProp="children"
+                              filterOption={(input, option) =>
+                                (option!.children as unknown as string)
+                                  .toLowerCase()
+                                  .includes(input.toLowerCase())
+                              }
+                            >
                               {ingredients.map((ingredient) => (
                                 <Option
                                   key={ingredient.id}
                                   value={ingredient.id}
                                 >
-                                  {ingredient.name} (
-                                  {ingredient.measurement_unit.symbol})
+                                  {`${ingredient.name} (${ingredient.measurement_unit.symbol})`}
                                 </Option>
                               ))}
                             </Select>
@@ -230,7 +244,16 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
                             className="mb-0 w-1/2"
                             rules={[{ required: true }]}
                           >
-                            <Select placeholder="Receta">
+                            <Select
+                              placeholder="Receta"
+                              showSearch
+                              optionFilterProp="children"
+                              filterOption={(input, option) =>
+                                (option!.children as unknown as string)
+                                  .toLowerCase()
+                                  .includes(input.toLowerCase())
+                              }
+                            >
                               {recipes.map((recipe) => (
                                 <Option key={recipe.id} value={recipe.id}>
                                   {recipe.name}
