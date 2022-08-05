@@ -16,7 +16,7 @@ import {
   Select,
 } from "antd";
 import { useIngredients, useRecipes } from "hooks";
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { Recipe, updateRecipe } from "services/recipes";
 const { Option } = Select;
 
@@ -35,26 +35,6 @@ const EditRecipeModal = ({
   const { recipes = [] } = useRecipes();
   const [deletedIngredients, setDeletedIngredients] = useState<number[]>([]);
   const [deletedSubrecipes, setDeletedSubrecipes] = useState<number[]>([]);
-
-  useLayoutEffect(() => {
-    form.setFieldsValue({
-      name: recipe.name,
-      description: recipe.description,
-      profit_percentage: recipe.profit_percentage * 100,
-      ingredients: recipe.ingredients.map(
-        ({ ingredient: { id: ingredient_id }, units, id }) => ({
-          id,
-          ingredient_id,
-          units,
-        })
-      ),
-      subrecipes: recipe.subrecipes.map(({ id, recipe, units }) => ({
-        id,
-        subrecipe_id: recipe.id,
-        units,
-      })),
-    });
-  }, [recipe, form]);
 
   const closeModal = () => {
     setVisible(false);
@@ -109,6 +89,23 @@ const EditRecipeModal = ({
           id="edit-recipe-form"
           onFinish={onFinish}
           form={form}
+          initialValues={{
+            name: recipe.name,
+            description: recipe.description,
+            profit_percentage: recipe.profit_percentage * 100,
+            ingredients: recipe.ingredients.map(
+              ({ ingredient: { id: ingredient_id }, units, id }) => ({
+                id,
+                ingredient_id,
+                units,
+              })
+            ),
+            subrecipes: recipe.subrecipes.map(({ id, recipe, units }) => ({
+              id,
+              subrecipe_id: recipe.id,
+              units,
+            })),
+          }}
         >
           <Row gutter={16}>
             <Col xs={18}>
