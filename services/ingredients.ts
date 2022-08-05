@@ -1,12 +1,19 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { MeasurementUnit } from "./measurement_units";
+import { MeasurementUnit, measurementUnitQuery } from "./measurement_units";
+
+export const ingredientQuery = `
+  id,
+  name,
+  price,
+  unit_price,
+  package_units,
+  measurement_unit:measurement_unit_id (${measurementUnitQuery})
+`;
 
 export const getIngredients = async () => {
   const { data, error } = await supabaseClient
     .from("ingredients")
-    .select(
-      "id, name, price, package_units, measurement_unit:measurement_unit_id ( name, symbol )"
-    )
+    .select(ingredientQuery)
     .order("name", { ascending: true });
 
   if (!error) {
@@ -29,9 +36,7 @@ export const createIngredient = async (ingredient: CreateIngredientOptions) => {
 export const getIngredient = async (ingredientId: number) => {
   const { data, error } = await supabaseClient
     .from("ingredients")
-    .select(
-      "id, name, price, unit_price, package_units, measurement_unit:measurement_unit_id ( id, name, symbol )"
-    )
+    .select(ingredientQuery)
     .eq("id", ingredientId);
 
   if (!error) {
@@ -75,16 +80,16 @@ export const deleteIngredient = async (ingredientId: number) => {
 export interface Ingredient {
   id: number;
   name: string;
-  measurement_unit: MeasurementUnit;
-  package_units: number;
   price: number;
   unit_price: number;
+  package_units: number;
+  measurement_unit: MeasurementUnit;
 }
 
 export interface CreateIngredientOptions {
   name: string;
-  user_id: string;
-  measurement_unit_id: number;
-  package_units: number;
   price: number;
+  package_units: number;
+  measurement_unit_id: number;
+  user_id: string;
 }

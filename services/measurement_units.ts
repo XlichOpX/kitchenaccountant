@@ -1,9 +1,11 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
+export const measurementUnitQuery = "id, name, symbol";
+
 export const getMeasurementUnits = async () => {
   const { data, error } = await supabaseClient
     .from("measurement_units")
-    .select("id, name, symbol")
+    .select(measurementUnitQuery)
     .order("name", { ascending: true });
 
   if (!error) {

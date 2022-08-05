@@ -1,44 +1,49 @@
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { Ingredient } from "./ingredients";
+import { Ingredient, ingredientQuery } from "./ingredients";
+
+export const recipeQuery = `
+  id,
+  name,
+  description,
+  collection_id,
+  profit_percentage,
+  created_at,
+  ingredients:recipe_ingredients (
+    id,
+    units,
+    ingredient:ingredient_id (${ingredientQuery})
+  ),
+  subrecipes:recipe_subrecipes!recipe_subrecipes_recipe_id_fkey (
+    id,
+    units,
+    recipe:subrecipe_id (
+      id,
+      name,
+      ingredients:recipe_ingredients (
+        id,
+        units,
+        ingredient:ingredient_id (${ingredientQuery})
+      )
+    )
+  )
+`;
 
 export const getRecipe = async (id: number) => {
   const { data, error } = await supabaseClient
     .from("recipes")
-    .select(
-      `*,
-      ingredients:recipe_ingredients (
-        id,
-        ingredient:ingredient_id (
-          id, name, price, unit_price, package_units, measurement_unit:measurement_unit_id ( id, name, symbol )
-        ),
-        units
-      ),
-      subrecipes:recipe_subrecipes!recipe_subrecipes_recipe_id_fkey (
-        id,
-        units,
-        recipe:subrecipe_id (
-          id, name, ingredients:recipe_ingredients (
-            id, units, ingredient:ingredient_id ( id, name, price, unit_price, package_units, measurement_unit:measurement_unit_id ( id, name, symbol ) )
-          )
-        )
-      )
-      `
-    )
+    .select(recipeQuery)
     .eq("id", id);
 
   if (!error) return data[0] as Recipe;
-
   throw new Error(error.message);
 };
 
 export const getRecipes = async () => {
   const { data, error } = await supabaseClient
     .from("recipes")
-    .select("id, name, created_at");
+    .select("id, name, description, created_at");
 
-  if (!error) {
-    return data as ListRecipe[];
-  }
+  if (!error) return data as ListRecipe[];
 };
 
 export const deleteRecipe = async (recipeId: number) => {
@@ -134,28 +139,29 @@ export const updateRecipe = async (
 export interface ListRecipe {
   id: number;
   name: string;
+  description?: string;
   created_at: string;
 }
 
 export interface Recipe {
   id: number;
-  created_at: string;
   name: string;
-  profit_percentage: number;
-  collection_id: number;
   description?: string;
+  collection_id: number;
+  created_at: string;
+  profit_percentage: number;
   ingredients: RecipeIngredient[];
   subrecipes: Subrecipe[];
 }
 
 export interface Subrecipe {
   id: number;
+  units: number;
   recipe: {
     id: number;
     name: string;
     ingredients: RecipeIngredient[];
   };
-  units: number;
 }
 
 export interface RecipeIngredient {
