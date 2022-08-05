@@ -47,7 +47,6 @@ const CreateCollectionModal = () => {
         onCancel={handleCancel}
         okButtonProps={{ htmlType: "submit", form: "create-collection-form" }}
         okText="Crear"
-        cancelText="Cancelar"
         confirmLoading={isSubmitting}
       >
         {error && <Alert type="error" message={error} className="mb-3" />}

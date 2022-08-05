@@ -69,7 +69,6 @@ const CreateRecipeModal = ({ collectionId }: { collectionId: number }) => {
         onCancel={closeModal}
         okButtonProps={{ htmlType: "submit", form: "create-recipe-form" }}
         okText="Crear"
-        cancelText="Cancelar"
         confirmLoading={isSubmitting}
       >
         {error && <Alert type="error" message={error} className="mb-3" />}

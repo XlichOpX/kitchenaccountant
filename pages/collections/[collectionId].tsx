@@ -82,9 +82,7 @@ const CollectionDetail: NextPageWithLayout<{ collectionId: number }> = ({
               onClick={() =>
                 confirm({
                   title: `¿Está seguro de eliminar la colleción "${collection.name}"?`,
-                  okText: "Sí, eliminar",
                   okButtonProps: { danger: true },
-                  cancelText: "Cancelar",
                   onOk: async () => {
                     try {
                       await deleteCollection();

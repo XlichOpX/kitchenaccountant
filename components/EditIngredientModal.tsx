@@ -58,7 +58,6 @@ const EditIngredientModal = ({ ingredient }: { ingredient: Ingredient }) => {
         onCancel={handleCancel}
         okButtonProps={{ htmlType: "submit", form: "edit-ingredient-form" }}
         okText="Guardar cambios"
-        cancelText="Cancelar"
         confirmLoading={isSubmitting}
       >
         {error && <Alert type="error" message={error} className="mb-3" />}

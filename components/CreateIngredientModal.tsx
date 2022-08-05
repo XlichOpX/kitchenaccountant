@@ -58,7 +58,6 @@ const CreateIngredientModal = () => {
         onCancel={handleCancel}
         okButtonProps={{ htmlType: "submit", form: "create-ingredient-form" }}
         okText="Crear"
-        cancelText="Cancelar"
         confirmLoading={isSubmitting}
       >
         {error && <Alert type="error" message={error} className="mb-3" />}

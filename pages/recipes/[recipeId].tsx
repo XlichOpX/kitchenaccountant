@@ -134,9 +134,7 @@ const RecipeDetail: NextPageWithLayout<{ recipeId: number }> = ({
               onClick={() =>
                 confirm({
                   title: `¿Está seguro de eliminar la receta "${recipe.name}"?`,
-                  okText: "Sí, eliminar",
                   okButtonProps: { danger: true },
-                  cancelText: "Cancelar",
                   onOk: async () => {
                     try {
                       await deleteRecipe();

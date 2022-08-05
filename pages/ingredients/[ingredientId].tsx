@@ -64,9 +64,7 @@ const IngredientDetail: NextPageWithLayout<{ ingredientId: number }> = ({
             onClick={() =>
               confirm({
                 title: "¿Está seguro de eliminar este ingrediente?",
-                okText: "Sí, eliminar",
                 okButtonProps: { danger: true },
-                cancelText: "Cancelar",
                 onOk: async () => {
                   try {
                     await deleteIngredient(ingredient.id);

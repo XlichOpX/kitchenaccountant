@@ -78,7 +78,6 @@ const EditRecipeModal = ({
         onCancel={closeModal}
         okButtonProps={{ htmlType: "submit", form: "edit-recipe-form" }}
         okText="Guardar cambios"
-        cancelText="Cancelar"
         confirmLoading={isSubmitting}
       >
         {error && <Alert type="error" message={error} className="mb-3" />}
