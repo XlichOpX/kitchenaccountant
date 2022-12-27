@@ -53,7 +53,7 @@ function DesktopNav() {
           </li>
         ))}
         <li>
-          <LogoutBtn className="transition-transform hover:scale-105" />
+          <LogoutBtn className="flex items-center transition-transform hover:scale-105" />
         </li>
       </ul>
     </nav>
@@ -92,16 +92,21 @@ function MobileNav() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="container mx-auto flex items-center gap-2 px-2 py-2 hover:bg-white/10"
+                  className="block hover:bg-white/10"
                   onClick={() => setOpen(false)}
                 >
-                  {icon}
-                  {label}
+                  <div className="container mx-auto flex items-center gap-2 px-2 py-2">
+                    {icon}
+                    {label}
+                  </div>
                 </Link>
               </li>
             ))}
             <li>
-              <LogoutBtn className="container mx-auto px-2 py-2 hover:bg-white/10" />
+              <LogoutBtn
+                className="block w-full hover:bg-white/10"
+                innerClassName="container mx-auto px-2 py-2"
+              />
             </li>
           </ul>
         </nav>
@@ -110,14 +115,24 @@ function MobileNav() {
   );
 }
 
-function LogoutBtn({ className }: { className?: string }) {
+function LogoutBtn({
+  innerClassName,
+  className,
+}: {
+  innerClassName?: string;
+  className?: string;
+}) {
   return (
-    <button
-      className={"flex items-center gap-2" + (className ? ` ${className}` : "")}
-      onClick={() => signOut({ callbackUrl: "/" })}
-    >
-      <IoLogOutSharp className="h-6 w-6" />
-      Salir
+    <button className={className} onClick={() => signOut({ callbackUrl: "/" })}>
+      <div
+        className={
+          "flex items-center gap-2" +
+          (innerClassName ? ` ${innerClassName}` : "")
+        }
+      >
+        <IoLogOutSharp className="h-6 w-6" />
+        Salir
+      </div>
     </button>
   );
 }
