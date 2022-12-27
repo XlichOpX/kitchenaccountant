@@ -48,13 +48,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  settings      Settings?
+  recipes       Recipe[]
+  ingredients   Ingredient[]
 }
 
 model VerificationToken {
@@ -63,4 +66,70 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Settings {
+  userId         String @unique
+  user           User   @relation(fields: [userId], references: [id])
+  currencySymbol String
+
+  @@index([userId])
+}
+
+model Recipe {
+  id            String             @id @default(cuid())
+  name          String
+  userId        String
+  user          User               @relation(fields: [userId], references: [id])
+  ingredients   RecipeIngredient[]
+  subRecipes    SubRecipe[]        @relation(name: "ParentRecipe")
+  parentRecipes SubRecipe[]        @relation(name: "SubRecipe")
+
+  @@index([userId])
+}
+
+model SubRecipe {
+  id             String @id @default(cuid())
+  recipeId       String
+  recipe         Recipe @relation(fields: [recipeId], references: [id], name: "SubRecipe", onDelete: Restrict)
+  parentRecipeId String
+  parentRecipe   Recipe @relation(fields: [parentRecipeId], references: [id], name: "ParentRecipe", onDelete: Cascade)
+  units          Float
+
+  @@index([parentRecipeId])
+  @@index([recipeId])
+}
+
+model RecipeIngredient {
+  id           String     @id @default(cuid())
+  units        Float
+  recipeId     String
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
+
+  @@index([recipeId])
+  @@index([ingredientId])
+}
+
+model Ingredient {
+  id                String             @id @default(cuid())
+  name              String
+  price             Float
+  unitPrice         Float
+  packageUnits      Float
+  measurementUnitId String
+  measurementUnit   MeasurementUnit    @relation(fields: [measurementUnitId], references: [id])
+  userId            String
+  user              User               @relation(fields: [userId], references: [id])
+  recipes           RecipeIngredient[]
+
+  @@index([measurementUnitId])
+  @@index([userId])
+}
+
+model MeasurementUnit {
+  id          String       @id @default(cuid())
+  symbol      String       @unique
+  ingredients Ingredient[]
 }
