@@ -3,6 +3,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
+import { env } from "~/env/client.mjs";
 
 import { trpc } from "../utils/trpc";
 
@@ -12,7 +13,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>KitchenAccountant</title>
+        <title>{env.NEXT_PUBLIC_APP_NAME}</title>
         <meta name="description" content="Gestor de recetas de cocina" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
