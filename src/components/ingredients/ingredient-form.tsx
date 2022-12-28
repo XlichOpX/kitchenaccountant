@@ -56,6 +56,7 @@ export const IngredientForm = ({
           <Input
             id="price"
             type="number"
+            step="any"
             onClick={(evt) => evt.currentTarget.select()}
             isInvalid={Boolean(errors.price)}
             {...register("price", {
@@ -75,6 +76,7 @@ export const IngredientForm = ({
                 borders="noRight"
                 className="h-full"
                 type="number"
+                step="any"
                 isInvalid={Boolean(errors.packageUnits)}
                 onClick={(evt) => evt.currentTarget.select()}
                 {...register("packageUnits", {
