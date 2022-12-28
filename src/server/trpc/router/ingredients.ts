@@ -12,4 +12,31 @@ export const ingredientRouter = router({
         },
       });
     }),
+
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().min(3).max(32),
+        price: z.number().positive(),
+        packageUnits: z.number().positive(),
+        measurementUnitId: z.string().min(1).max(64),
+      })
+    )
+    .mutation(
+      async ({
+        ctx,
+        input: { name, price, packageUnits, measurementUnitId },
+      }) => {
+        return await ctx.prisma.ingredient.create({
+          data: {
+            name,
+            price,
+            packageUnits,
+            unitPrice: price / packageUnits,
+            userId: ctx.session.user.id,
+            measurementUnitId,
+          },
+        });
+      }
+    ),
 });
