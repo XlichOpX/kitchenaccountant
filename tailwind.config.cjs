@@ -19,10 +19,20 @@ module.exports = {
             height: 0,
           },
         },
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+        fadeOut: {
+          "0%": { opacity: 1 },
+          "100%": { opacity: 0 },
+        },
       },
       animation: {
         "slide-collapsible-down": "slideCollapsibleDown 100ms ease-out",
         "slide-collapsible-up": "slideCollapsibleUp 100ms ease-out",
+        "fade-in": "fadeIn 100ms ease-out",
+        "fade-out": "fadeOut 100ms ease-in",
       },
     },
   },
