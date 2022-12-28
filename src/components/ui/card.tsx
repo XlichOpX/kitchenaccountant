@@ -11,7 +11,7 @@ export function Card({
   return (
     <Comp
       className={
-        "rounded border bg-neutral-50 p-3 shadow-sm" + (` ${className}` ?? "")
+        "rounded border bg-white p-3 shadow-sm" + (` ${className}` ?? "")
       }
       {...props}
     >
