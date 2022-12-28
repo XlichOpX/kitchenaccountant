@@ -6,6 +6,10 @@ export function IngredientList({
 }: {
   ingredients: RouterOutputs["ingredient"]["getAll"];
 }) {
+  if (ingredients.length === 0) {
+    return <p>No se encontraron ingredientes...</p>;
+  }
+
   return (
     <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
       {ingredients.map((ingredient) => (
