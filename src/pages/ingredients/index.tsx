@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { CreateIngredientModal } from "~/components/ingredients/create-ingredient-modal";
 import { IngredientList } from "~/components/ingredients/ingredient-list";
 import { MainLayout } from "~/components/main-layout";
 import { Input } from "~/components/ui/input";
@@ -19,20 +20,24 @@ const Ingredients: NextPage = () => {
       </Head>
 
       <MainLayout>
-        <h1 className="mb-3 text-center text-2xl font-bold md:text-left">
+        <h1 className="mb-3 text-center text-2xl font-bold sm:text-left">
           Ingredientes
         </h1>
-        <div className="flex items-center justify-between">
-          <label className="sr-only" id="searchIngredients">
-            Buscar ingredientes
-          </label>
-          <Input
-            id="searchIngredients"
-            placeholder="Buscar ingredientes"
-            className="block w-full sm:w-1/3 lg:w-1/4"
-            onChange={(e) => setSearch(e.target.value)}
-            maxLength={32}
-          />
+        <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
+          <div className="w-full sm:w-1/3 lg:w-1/4">
+            <label className="sr-only" id="searchIngredients">
+              Buscar ingredientes
+            </label>
+            <Input
+              id="searchIngredients"
+              placeholder="Buscar ingredientes"
+              className="block w-full"
+              onChange={(e) => setSearch(e.target.value)}
+              maxLength={32}
+            />
+          </div>
+
+          <CreateIngredientModal />
         </div>
         <hr className="mt-2 mb-3" />
         {ingredients && <IngredientList ingredients={ingredients} />}

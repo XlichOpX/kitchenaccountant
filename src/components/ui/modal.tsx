@@ -1,7 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import type { VariantProps } from "class-variance-authority";
 import { cva, cx } from "class-variance-authority";
-import type { ComponentPropsWithRef, PropsWithChildren } from "react";
+import type { ComponentPropsWithoutRef, ComponentPropsWithRef } from "react";
 import { forwardRef } from "react";
 import { RxCross1 } from "react-icons/rx";
 
@@ -55,8 +55,34 @@ export const ModalTitle = ({
   children,
   className,
   ...props
-}: PropsWithChildren<DialogPrimitive.DialogTitleProps>) => (
-  <DialogPrimitive.Title className={cx("font-medium", className)} {...props}>
+}: DialogPrimitive.DialogTitleProps) => (
+  <DialogPrimitive.Title
+    className={cx("text-lg font-medium", className)}
+    {...props}
+  >
     {children}
   </DialogPrimitive.Title>
+);
+
+export const ModalBody = ({
+  children,
+  className,
+  ...props
+}: ComponentPropsWithoutRef<"div">) => (
+  <div className={cx("my-3", className)} {...props}>
+    {children}
+  </div>
+);
+
+export const ModalActions = ({
+  children,
+  className,
+  ...props
+}: ComponentPropsWithoutRef<"div">) => (
+  <div
+    className={cx("mt-3 flex items-center justify-end gap-3", className)}
+    {...props}
+  >
+    {children}
+  </div>
 );
