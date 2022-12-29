@@ -6,6 +6,7 @@ import { trpc } from "~/utils/trpc";
 import { Alert } from "../ui/alert";
 import { Button } from "../ui/button";
 import { CenteredSpinner } from "../ui/centered-spinner";
+import { ConfirmPopover } from "../ui/confirm-popover";
 import {
   Modal,
   ModalActions,
@@ -79,22 +80,23 @@ export const EditIngredientModal = ({
           </ModalBody>
 
           <ModalActions>
-            <Button
-              onClick={() =>
-                deleteMutation.mutate(
-                  { id: ingredient.id },
-                  {
-                    onSuccess: () => utils.ingredient.getAll.invalidate(),
-                  }
-                )
+            <ConfirmPopover
+              description="¿Realmente desea eliminar este ingrediente?"
+              trigger={
+                <Button className="mr-auto" intent="danger">
+                  <FaTrash />
+                  Eliminar
+                </Button>
               }
-              intent="danger"
-              className="mr-auto"
-              isLoading={deleteMutation.isLoading}
-            >
-              <FaTrash />
-              Eliminar
-            </Button>
+              confirmProps={{
+                onClick: () =>
+                  deleteMutation.mutate(
+                    { id: ingredient.id },
+                    { onSuccess: () => utils.ingredient.getAll.invalidate() }
+                  ),
+                isLoading: deleteMutation.isLoading,
+              }}
+            />
 
             <SaveButton
               type="submit"

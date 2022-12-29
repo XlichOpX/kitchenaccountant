@@ -11,8 +11,10 @@ const buttonClasses = cva(
       intent: {
         primary:
           "text-amber-900 bg-amber-200 hover:bg-amber-300 shadow-sm border focus:ring-amber-200 border-amber-400 disabled:bg-amber-100 disabled:border-amber-300 disabled:text-amber-500",
+        outlinePrimary:
+          "text-amber-900 bg-transparent border border-amber-900 hover:bg-amber-200 hover:shadow-sm focus:ring-amber-200 disabled:border-amber-300 disabled:bg-white disabled:text-amber-500 disabled:hover:bg-white",
         danger:
-          "text-red-500 bg-red-200 hover:bg-red-300 shadow-sm border focus:ring-red-200 border-red-300 disabled:bg-red-100 disabled:border-red-300 disabled:text-red-500",
+          "text-red-500 bg-red-100 hover:bg-red-200 shadow-sm border focus:ring-red-200 border-red-500 disabled:bg-red-100 disabled:border-red-300 disabled:text-red-500",
         ghost: "hover:bg-black/10 focus:ring-amber-200",
       },
       size: {
