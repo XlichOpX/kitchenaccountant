@@ -5,3 +5,9 @@
 body {
   @apply bg-neutral-100;
 }
+
+@layer base {
+  .h1 {
+    @apply mb-3 text-center text-2xl font-bold sm:text-left;
+  }
+}

@@ -14,7 +14,11 @@ import {
 import { SaveButton } from "../ui/save-button";
 import { IngredientForm } from "./ingredient-form";
 
-export function CreateIngredientModal() {
+export function CreateIngredientModal({
+  btnClassName,
+}: {
+  btnClassName?: string;
+}) {
   const [open, setOpen] = useState(false);
   const { data: measurementUnits, isLoading } =
     trpc.measurementUnit.getAll.useQuery();
@@ -26,7 +30,7 @@ export function CreateIngredientModal() {
     <>
       <Modal open={open} onOpenChange={setOpen}>
         <ModalTrigger asChild>
-          <Button className="w-full sm:w-auto">
+          <Button className={btnClassName}>
             <BsPlusLg />
             Nuevo ingrediente
           </Button>
