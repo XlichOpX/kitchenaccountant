@@ -21,7 +21,7 @@ const links = [
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 bg-slate-800 text-white shadow">
+    <header className="sticky top-0 z-10 bg-slate-800 text-white shadow">
       <div className="container relative mx-auto flex h-14 items-center justify-between p-2">
         <Link href="/" className="flex items-center gap-2">
           <ColorLogo className="h-10 w-10" />

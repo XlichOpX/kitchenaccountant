@@ -29,7 +29,7 @@ export type ModalProps = VariantProps<typeof modalClasses> &
 export const ModalContent = forwardRef<HTMLDivElement, ModalProps>(
   ({ children, className, size, ...props }, forwardedRef) => (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 flex overflow-auto bg-black/25 p-2 backdrop-blur-sm data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out">
+      <DialogPrimitive.Overlay className="fixed inset-0 z-20 flex overflow-auto bg-black/25 p-2 backdrop-blur-sm data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out">
         <DialogPrimitive.Content
           {...props}
           ref={forwardedRef}

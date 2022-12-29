@@ -3,6 +3,7 @@ import Head from "next/head";
 import { CreateIngredientModal } from "~/components/ingredients/create-ingredient-modal";
 import { IngredientList } from "~/components/ingredients/ingredient-list";
 import { MainLayout } from "~/components/main-layout";
+import { CenteredSpinner } from "~/components/ui/centered-spinner";
 import { Input } from "~/components/ui/input";
 import { useDebouncedState } from "~/hooks/useDebouncedState";
 
@@ -11,7 +12,9 @@ import { trpc } from "~/utils/trpc";
 
 const Ingredients: NextPage = () => {
   const [search, setSearch] = useDebouncedState("");
-  const { data: ingredients } = trpc.ingredient.getAll.useQuery({ search });
+  const { data: ingredients, isLoading } = trpc.ingredient.getAll.useQuery({
+    search,
+  });
 
   return (
     <>
@@ -40,7 +43,10 @@ const Ingredients: NextPage = () => {
           <CreateIngredientModal />
         </div>
         <hr className="mt-2 mb-3" />
-        {ingredients && <IngredientList ingredients={ingredients} />}
+        <section aria-busy={isLoading} aria-live="polite">
+          {ingredients && <IngredientList ingredients={ingredients} />}
+          {isLoading && <CenteredSpinner />}
+        </section>
       </MainLayout>
     </>
   );

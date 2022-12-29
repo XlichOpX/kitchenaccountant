@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { MainLayout } from "~/components/main-layout";
+import { Button } from "~/components/ui/button";
 
 import { getTitle } from "~/utils/get-title";
 
@@ -11,7 +12,9 @@ const Ingredients: NextPage = () => {
         <title>{getTitle("Recetas")}</title>
       </Head>
 
-      <MainLayout>Recetas</MainLayout>
+      <MainLayout>
+        <Button isLoading>Prueba</Button>
+      </MainLayout>
     </>
   );
 };

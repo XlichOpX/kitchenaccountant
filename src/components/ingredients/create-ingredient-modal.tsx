@@ -34,7 +34,7 @@ export function CreateIngredientModal() {
 
         <ModalContent>
           <ModalTitle>Agregar nuevo ingrediente</ModalTitle>
-          <ModalBody>
+          <ModalBody aria-live="polite" aria-busy={isLoading}>
             {measurementUnits && (
               <IngredientForm
                 id="CreateIngredientForm"
@@ -45,14 +45,13 @@ export function CreateIngredientModal() {
                   packageUnits: 1000,
                   price: 5,
                 }}
-                onSubmit={async (data) => {
-                  try {
-                    await mutation.mutateAsync(data);
-                    utils.ingredient.getAll.invalidate();
-                    setOpen(false);
-                  } catch (error) {
-                    console.error(error);
-                  }
+                onSubmit={(data) => {
+                  mutation.mutate(data, {
+                    onSuccess: async () => {
+                      utils.ingredient.getAll.invalidate();
+                      setOpen(false);
+                    },
+                  });
                 }}
               />
             )}
@@ -60,7 +59,11 @@ export function CreateIngredientModal() {
           </ModalBody>
 
           <ModalActions>
-            <Button type="submit" form="CreateIngredientForm">
+            <Button
+              type="submit"
+              form="CreateIngredientForm"
+              isLoading={mutation.isLoading}
+            >
               <FaSave />
               Guardar
             </Button>
