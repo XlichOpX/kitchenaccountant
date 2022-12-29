@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FaSave } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import type { RouterOutputs } from "~/utils/trpc";
 import { trpc } from "~/utils/trpc";
@@ -13,6 +12,7 @@ import {
   ModalTitle,
   ModalTrigger,
 } from "../ui/modal";
+import { SaveButton } from "../ui/save-button";
 import { IngredientForm } from "./ingredient-form";
 
 export const EditIngredientModal = ({
@@ -69,14 +69,11 @@ export const EditIngredientModal = ({
           </ModalBody>
 
           <ModalActions>
-            <Button
+            <SaveButton
               type="submit"
               form="EditIngredientForm"
               isLoading={mutation.isLoading}
-            >
-              <FaSave />
-              Guardar
-            </Button>
+            />
           </ModalActions>
         </ModalContent>
       </Modal>

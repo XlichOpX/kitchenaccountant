@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { BsPlusLg } from "react-icons/bs";
-import { FaSave } from "react-icons/fa";
 import { trpc } from "~/utils/trpc";
 import { Button } from "../ui/button";
 import { CenteredSpinner } from "../ui/centered-spinner";
@@ -12,6 +11,7 @@ import {
   ModalTitle,
   ModalTrigger,
 } from "../ui/modal";
+import { SaveButton } from "../ui/save-button";
 import { IngredientForm } from "./ingredient-form";
 
 export function CreateIngredientModal() {
@@ -59,14 +59,11 @@ export function CreateIngredientModal() {
           </ModalBody>
 
           <ModalActions>
-            <Button
+            <SaveButton
               type="submit"
               form="CreateIngredientForm"
               isLoading={mutation.isLoading}
-            >
-              <FaSave />
-              Guardar
-            </Button>
+            />
           </ModalActions>
         </ModalContent>
       </Modal>
