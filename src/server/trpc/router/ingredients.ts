@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+  ingredientCreateSchema,
+  ingredientUpdateSchema,
+} from "~/schema/ingredient";
 import { protectedProcedure, router } from "../trpc";
 
 export const ingredientRouter = router({
@@ -14,14 +18,7 @@ export const ingredientRouter = router({
     }),
 
   create: protectedProcedure
-    .input(
-      z.object({
-        name: z.string().min(3).max(32),
-        price: z.number().positive(),
-        packageUnits: z.number().positive(),
-        measurementUnitId: z.string().min(1).max(64),
-      })
-    )
+    .input(ingredientCreateSchema)
     .mutation(
       async ({
         ctx,
@@ -39,4 +36,13 @@ export const ingredientRouter = router({
         });
       }
     ),
+
+  update: protectedProcedure
+    .input(ingredientUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.ingredient.update({
+        data: input,
+        where: { id: input.id, userId: ctx.session.user.id },
+      });
+    }),
 });

@@ -5,15 +5,17 @@ import { forwardRef } from "react";
 import { CenteredSpinner } from "./centered-spinner";
 
 const buttonClasses = cva(
-  "overflow-hidden relative rounded border shadow-sm flex gap-2 items-center justify-center font-medium disabled:cursor-not-allowed focus-within:outline-none focus:ring-2",
+  "overflow-hidden relative rounded flex gap-2 items-center justify-center font-medium disabled:cursor-not-allowed focus-within:outline-none focus:ring-2",
   {
     variants: {
       intent: {
         primary:
-          "text-amber-900 bg-amber-300 focus:ring-amber-200 border-amber-400 disabled:bg-amber-200 disabled:border-amber-300 disabled:text-amber-600",
+          "text-amber-900 bg-amber-200 hover:bg-amber-300 shadow-sm border focus:ring-amber-200 border-amber-400 disabled:bg-amber-100 disabled:border-amber-300 disabled:text-amber-500",
+        ghost: "hover:bg-black/10 focus:ring-amber-200",
       },
       size: {
         md: "px-2 py-1",
+        sm: "p-0.5",
       },
     },
     defaultVariants: {
