@@ -13,7 +13,7 @@ const Ingredients: NextPage = () => {
       </Head>
 
       <MainLayout>
-        <Button isLoading>Prueba</Button>
+        <Button intent="danger">Prueba</Button>
       </MainLayout>
     </>
   );

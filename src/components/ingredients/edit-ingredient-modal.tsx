@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import type { RouterOutputs } from "~/utils/trpc";
 import { trpc } from "~/utils/trpc";
+import { Alert } from "../ui/alert";
 import { Button } from "../ui/button";
 import { CenteredSpinner } from "../ui/centered-spinner";
 import {
@@ -24,7 +26,8 @@ export const EditIngredientModal = ({
   const { data: measurementUnits, isLoading } =
     trpc.measurementUnit.getAll.useQuery();
 
-  const mutation = trpc.ingredient.update.useMutation();
+  const updateMutation = trpc.ingredient.update.useMutation();
+  const deleteMutation = trpc.ingredient.delete.useMutation();
   const utils = trpc.useContext();
 
   return (
@@ -42,6 +45,13 @@ export const EditIngredientModal = ({
         <ModalContent>
           <ModalTitle>Editar ingrediente: {ingredient.name}</ModalTitle>
           <ModalBody aria-live="polite" aria-busy={isLoading}>
+            {deleteMutation.error && (
+              <Alert className="mb-3">
+                {deleteMutation.error.data?.code === "CONFLICT"
+                  ? "El ingrediente se encuentra en uso en una o más recetas"
+                  : "Ocurrió un error al eliminar el ingrediente"}
+              </Alert>
+            )}
             {measurementUnits && (
               <IngredientForm
                 id="EditIngredientForm"
@@ -53,7 +63,7 @@ export const EditIngredientModal = ({
                   price: ingredient.price,
                 }}
                 onSubmit={(data) => {
-                  mutation.mutate(
+                  updateMutation.mutate(
                     { id: ingredient.id, ...data },
                     {
                       onSuccess: async () => {
@@ -69,10 +79,27 @@ export const EditIngredientModal = ({
           </ModalBody>
 
           <ModalActions>
+            <Button
+              onClick={() =>
+                deleteMutation.mutate(
+                  { id: ingredient.id },
+                  {
+                    onSuccess: () => utils.ingredient.getAll.invalidate(),
+                  }
+                )
+              }
+              intent="danger"
+              className="mr-auto"
+              isLoading={deleteMutation.isLoading}
+            >
+              <FaTrash />
+              Eliminar
+            </Button>
+
             <SaveButton
               type="submit"
               form="EditIngredientForm"
-              isLoading={mutation.isLoading}
+              isLoading={updateMutation.isLoading}
             />
           </ModalActions>
         </ModalContent>

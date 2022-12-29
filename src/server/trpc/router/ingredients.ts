@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { cuidSchema } from "~/schema/common";
 import {
   ingredientCreateSchema,
   ingredientUpdateSchema,
@@ -42,6 +44,27 @@ export const ingredientRouter = router({
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.ingredient.update({
         data: input,
+        where: { id: input.id, userId: ctx.session.user.id },
+      });
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: cuidSchema }))
+    .mutation(async ({ ctx, input }) => {
+      const count = await ctx.prisma.ingredient.findUnique({
+        select: { _count: { select: { recipes: true } } },
+        where: { id: input.id, userId: ctx.session.user.id },
+      });
+
+      if (!count) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      if (count._count.recipes > 0) {
+        throw new TRPCError({ code: "CONFLICT" });
+      }
+
+      return await ctx.prisma.ingredient.delete({
         where: { id: input.id, userId: ctx.session.user.id },
       });
     }),
