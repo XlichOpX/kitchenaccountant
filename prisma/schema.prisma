@@ -78,14 +78,16 @@ model Settings {
 }
 
 model Recipe {
-  id            String             @id @default(cuid())
-  name          String
-  userId        String
-  user          User               @relation(fields: [userId], references: [id])
-  ingredients   RecipeIngredient[]
-  subRecipes    SubRecipe[]        @relation(name: "ParentRecipe")
-  parentRecipes SubRecipe[]        @relation(name: "SubRecipe")
+  id               String             @id @default(cuid())
+  name             String
+  userId           String
+  profitPercentage Float
+  user             User               @relation(fields: [userId], references: [id])
+  ingredients      RecipeIngredient[]
+  subRecipes       SubRecipe[]        @relation(name: "ParentRecipe")
+  parentRecipes    SubRecipe[]        @relation(name: "SubRecipe")
 
+  @@unique([name, userId])
   @@index([userId])
 }
 
@@ -125,6 +127,7 @@ model Ingredient {
   user              User               @relation(fields: [userId], references: [id])
   recipes           RecipeIngredient[]
 
+  @@unique([name, userId])
   @@index([measurementUnitId])
   @@index([userId])
 }
