@@ -34,13 +34,22 @@ export type ButtonProps = VariantProps<typeof buttonClasses> &
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { children, intent, className, isLoading = false, disabled, ...props },
+    {
+      children,
+      intent,
+      className,
+      isLoading = false,
+      disabled,
+      type = "button",
+      ...props
+    },
     ref
   ) => (
     <button
       className={buttonClasses({ intent, className })}
       ref={ref}
       disabled={isLoading || disabled}
+      type={type}
       {...props}
     >
       {isLoading && (
