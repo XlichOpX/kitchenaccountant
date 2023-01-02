@@ -5,11 +5,7 @@ import type { LinkProps } from "next/link";
 import Link from "next/link";
 import { env } from "~/env/client.mjs";
 
-import { trpc } from "../utils/trpc";
-
 const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: "desde tRPC" });
-
   return (
     <>
       <Head>
@@ -27,11 +23,6 @@ const Home: NextPage = () => {
             <AppLink href="/recipes" label="Recetas" />
           </div>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello.data
-                ? hello.data.greeting
-                : "Cargando consulta de tRPC..."}
-            </p>
             <AuthShowcase />
           </div>
         </div>
@@ -45,18 +36,12 @@ export default Home;
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
 
-  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
-
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
         {sessionData && (
           <span>Ha iniciado sesión como {sessionData.user?.name}</span>
         )}
-        {secretMessage && <span> - {secretMessage}</span>}
       </p>
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
