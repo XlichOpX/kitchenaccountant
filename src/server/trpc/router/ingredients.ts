@@ -12,9 +12,12 @@ export const ingredientRouter = router({
     .input(z.object({ search: z.string().max(32).optional() }).optional())
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.ingredient.findMany({
+        include: { measurementUnit: true },
         where: {
           userId: ctx.session.user.id,
-          ...(input?.search && { name: { contains: input.search } }),
+          ...(input?.search && {
+            name: { contains: input.search, mode: "insensitive" },
+          }),
         },
       });
     }),
