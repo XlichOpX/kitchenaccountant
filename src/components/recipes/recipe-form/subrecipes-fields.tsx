@@ -28,6 +28,10 @@ export const SubrecipesFields = ({
     name: "subrecipes",
   });
 
+  if (recipes.length === 0) {
+    return null;
+  }
+
   return (
     <fieldset>
       <div className="mb-1 flex justify-end">

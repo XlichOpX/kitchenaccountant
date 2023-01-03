@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { UseFormReturn } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
 import { BsPlusLg, BsXLg } from "react-icons/bs";
@@ -27,6 +28,18 @@ export const IngredientsFields = ({
     control,
     name: "ingredients",
   });
+
+  if (ingredients.length === 0) {
+    return (
+      <p>
+        No ha creado ingredientes, por favor{" "}
+        <Link href="/ingredients" className="underline">
+          cree algunos
+        </Link>{" "}
+        antes de crear una receta.
+      </p>
+    );
+  }
 
   return (
     <fieldset>
