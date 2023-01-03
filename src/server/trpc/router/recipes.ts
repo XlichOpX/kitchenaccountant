@@ -8,11 +8,23 @@ export const recipeRouter = router({
   getAll: protectedProcedure
     .input(z.object({ search: z.string().max(32).optional() }).optional())
     .query(async ({ ctx, input }) => {
+      const subRecipesInclude = {
+        include: {
+          recipe: {
+            include: {
+              subRecipes: true,
+              ingredients: { include: { ingredient: true } },
+            },
+          },
+        },
+      };
+
       const recipes = await ctx.prisma.recipe.findMany({
         include: {
           ingredients: {
             include: { ingredient: true },
           },
+          subRecipes: subRecipesInclude,
         },
         where: {
           userId: ctx.session.user.id,
@@ -22,25 +34,64 @@ export const recipeRouter = router({
         },
       });
 
-      const recipesWithPrices = recipes.map((recipe) => {
-        const ingredientCost = recipe.ingredients.reduce(
+      const recipesWithPrices = [];
+      for (const recipe of recipes) {
+        const ingredientsCost = getIngredientsCost(recipe.ingredients);
+        const subRecipesCost = await getSubrecipesCost(recipe.subRecipes);
+        const cost = ingredientsCost + subRecipesCost;
+        const price = cost * (recipe.profitPercentage / 100 + 1);
+        recipesWithPrices.push({
+          ...recipe,
+          ingredientsCost,
+          subRecipesCost,
+          cost,
+          price,
+        });
+      }
+
+      return recipesWithPrices;
+
+      function getIngredientsCost(
+        ingredients: typeof recipes[number]["ingredients"]
+      ) {
+        return ingredients.reduce(
           (ac, ingredient) =>
             ac + ingredient.ingredient.unitPrice * ingredient.units,
           0
         );
+      }
 
-        const price = ingredientCost * (recipe.profitPercentage / 100 + 1);
+      async function getSubrecipesCost(
+        subRecipes: typeof recipes[number]["subRecipes"]
+      ): Promise<number> {
+        let total = 0;
+        for (const subRecipe of subRecipes) {
+          total += getIngredientsCost(subRecipe.recipe.ingredients);
 
-        return { ...recipe, ingredientCost, cost: ingredientCost, price };
-      });
+          if (subRecipe.recipe.subRecipes.length === 0) {
+            continue;
+          }
 
-      return recipesWithPrices;
+          const subrecipeSubrecipes = await ctx.prisma.subRecipe.findMany({
+            ...subRecipesInclude,
+            where: {
+              parentRecipeId: subRecipe.recipe.id,
+            },
+          });
+
+          total += await getSubrecipesCost(subrecipeSubrecipes);
+        }
+        return total;
+      }
     }),
 
   create: protectedProcedure
     .input(recipeCreateSchema)
     .mutation(
-      async ({ ctx, input: { name, profitPercentage, ingredients } }) => {
+      async ({
+        ctx,
+        input: { name, profitPercentage, ingredients, subrecipes },
+      }) => {
         return await ctx.prisma.recipe.create({
           data: {
             name,
@@ -54,6 +105,14 @@ export const recipeRouter = router({
                 })),
               },
             },
+            subRecipes: {
+              createMany: {
+                data: subrecipes.map(({ subrecipeId, units }) => ({
+                  recipeId: subrecipeId,
+                  units,
+                })),
+              },
+            },
           },
         });
       }
@@ -61,15 +120,24 @@ export const recipeRouter = router({
 
   update: protectedProcedure
     .input(recipeUpdateSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input: { subrecipes, ingredients, ...input } }) => {
       return await ctx.prisma.recipe.update({
         data: {
           ...input,
           ingredients: {
             deleteMany: {},
             createMany: {
-              data: input.ingredients.map(({ ingredientId, units }) => ({
+              data: ingredients.map(({ ingredientId, units }) => ({
                 ingredientId,
+                units,
+              })),
+            },
+          },
+          subRecipes: {
+            deleteMany: {},
+            createMany: {
+              data: subrecipes.map(({ subrecipeId, units }) => ({
+                recipeId: subrecipeId,
                 units,
               })),
             },
@@ -93,7 +161,7 @@ export const recipeRouter = router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      if (counts._count.subRecipes > 0 || counts._count.parentRecipes > 0) {
+      if (counts._count.parentRecipes > 0) {
         throw new TRPCError({ code: "CONFLICT" });
       }
 

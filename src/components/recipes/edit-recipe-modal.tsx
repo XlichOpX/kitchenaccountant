@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import type { RouterOutputs } from "~/utils/trpc";
@@ -24,7 +24,15 @@ export const EditRecipeModal = ({
   recipe: RouterOutputs["recipe"]["getAll"][number];
 }) => {
   const [open, setOpen] = useState(false);
-  const { data: ingredients, isLoading } = trpc.ingredient.getAll.useQuery();
+  const { data: ingredients, isLoading: isLoadingIngredients } =
+    trpc.ingredient.getAll.useQuery();
+  const { data: recipes, isLoading: isLoadingRecipes } =
+    trpc.recipe.getAll.useQuery();
+
+  const filteredRecipes = useMemo(
+    () => recipes?.filter((r) => r.id !== recipe.id),
+    [recipes, recipe]
+  );
 
   const updateMutation = trpc.recipe.update.useMutation();
   const deleteMutation = trpc.recipe.delete.useMutation();
@@ -32,7 +40,15 @@ export const EditRecipeModal = ({
 
   return (
     <>
-      <Modal open={open} onOpenChange={setOpen}>
+      <Modal
+        open={open}
+        onOpenChange={(open) => {
+          if (!open) {
+            deleteMutation.reset();
+          }
+          setOpen(open);
+        }}
+      >
         <ModalTrigger asChild>
           <Button intent="ghost" title={`Editar receta: ${recipe.name}`}>
             <MdEdit />
@@ -41,24 +57,29 @@ export const EditRecipeModal = ({
 
         <ModalContent>
           <ModalTitle>Editar receta: {recipe.name}</ModalTitle>
-          <ModalBody aria-live="polite" aria-busy={isLoading}>
+          <ModalBody aria-live="polite" aria-busy={isLoadingIngredients}>
             {deleteMutation.error && (
-              <Alert className="mb-3">
+              <Alert className="mb-3" role="alert">
                 {deleteMutation.error.data?.code === "CONFLICT"
                   ? "La receta se encuentra en uso en una o más recetas"
                   : "Ocurrió un error al eliminar la receta"}
               </Alert>
             )}
-            {ingredients && (
+            {ingredients && filteredRecipes && (
               <RecipeForm
                 id="EditRecipeForm"
                 ingredients={ingredients}
+                recipes={filteredRecipes}
                 defaultValues={{
                   name: recipe.name,
                   profitPercentage: recipe.profitPercentage,
                   ingredients: recipe.ingredients.map(
                     ({ ingredientId, units }) => ({ ingredientId, units })
                   ),
+                  subrecipes: recipe.subRecipes.map(({ recipeId, units }) => ({
+                    subrecipeId: recipeId,
+                    units,
+                  })),
                 }}
                 onSubmit={(data) => {
                   updateMutation.mutate(
@@ -73,7 +94,7 @@ export const EditRecipeModal = ({
                 }}
               />
             )}
-            {isLoading && <CenteredSpinner />}
+            {(isLoadingIngredients || isLoadingRecipes) && <CenteredSpinner />}
           </ModalBody>
 
           <ModalActions>

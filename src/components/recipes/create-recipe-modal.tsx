@@ -16,7 +16,10 @@ import { RecipeForm } from "./recipe-form";
 
 export function CreateRecipeModal({ btnClassName }: { btnClassName?: string }) {
   const [open, setOpen] = useState(false);
-  const { data: ingredients, isLoading } = trpc.ingredient.getAll.useQuery();
+  const { data: ingredients, isLoading: isLoadingIngredients } =
+    trpc.ingredient.getAll.useQuery();
+  const { data: recipes, isLoading: isLoadingRecipes } =
+    trpc.recipe.getAll.useQuery();
 
   const mutation = trpc.recipe.create.useMutation();
   const utils = trpc.useContext();
@@ -33,16 +36,18 @@ export function CreateRecipeModal({ btnClassName }: { btnClassName?: string }) {
 
         <ModalContent>
           <ModalTitle>Agregar nueva receta</ModalTitle>
-          <ModalBody aria-live="polite" aria-busy={isLoading}>
-            {ingredients && (
+          <ModalBody aria-live="polite" aria-busy={isLoadingIngredients}>
+            {ingredients && recipes && (
               <RecipeForm
                 id="CreateRecipeForm"
                 ingredients={ingredients}
+                recipes={recipes}
                 defaultValues={{
                   name: "",
                   ingredients: [
                     { ingredientId: ingredients[0]?.id, units: 100 },
                   ],
+                  subrecipes: [],
                   profitPercentage: 80,
                 }}
                 onSubmit={(data) => {
@@ -55,7 +60,7 @@ export function CreateRecipeModal({ btnClassName }: { btnClassName?: string }) {
                 }}
               />
             )}
-            {isLoading && <CenteredSpinner />}
+            {(isLoadingIngredients || isLoadingRecipes) && <CenteredSpinner />}
           </ModalBody>
 
           <ModalActions>

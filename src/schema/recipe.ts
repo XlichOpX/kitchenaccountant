@@ -10,6 +10,12 @@ export const recipeCreateSchema = z.object({
       units: z.number().positive(),
     })
     .array(),
+  subrecipes: z
+    .object({
+      subrecipeId: cuidSchema,
+      units: z.number().positive(),
+    })
+    .array(),
 });
 
 export const recipeUpdateSchema = recipeCreateSchema.extend({
