@@ -76,16 +76,16 @@ model Recipe {
   profitPercentage Float
   user             User               @relation(fields: [userId], references: [id])
   ingredients      RecipeIngredient[]
-  subRecipes       SubRecipe[]        @relation(name: "ParentRecipe")
-  parentRecipes    SubRecipe[]        @relation(name: "SubRecipe")
+  subrecipes       Subrecipe[]        @relation(name: "ParentRecipe")
+  parentRecipes    Subrecipe[]        @relation(name: "Subrecipe")
 
   @@unique([name, userId])
 }
 
-model SubRecipe {
+model Subrecipe {
   id             String @id @default(cuid())
   recipeId       String
-  recipe         Recipe @relation(fields: [recipeId], references: [id], name: "SubRecipe", onDelete: Restrict)
+  recipe         Recipe @relation(fields: [recipeId], references: [id], name: "Subrecipe", onDelete: Restrict)
   parentRecipeId String
   parentRecipe   Recipe @relation(fields: [parentRecipeId], references: [id], name: "ParentRecipe", onDelete: Cascade)
   units          Float

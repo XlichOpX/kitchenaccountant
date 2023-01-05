@@ -76,7 +76,7 @@ export const EditRecipeModal = ({
                   ingredients: recipe.ingredients.map(
                     ({ ingredientId, units }) => ({ ingredientId, units })
                   ),
-                  subrecipes: recipe.subRecipes.map(({ recipeId, units }) => ({
+                  subrecipes: recipe.subrecipes.map(({ recipeId, units }) => ({
                     subrecipeId: recipeId,
                     units,
                   })),

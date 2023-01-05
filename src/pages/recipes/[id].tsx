@@ -36,7 +36,7 @@ const RecipeDetail: NextPage<
           <>
             <h2 className="h2">Recetas base</h2>
             <ul className="mb-3 list-inside list-disc">
-              {recipe.subRecipes.map((subrecipe) => (
+              {recipe.subrecipes.map((subrecipe) => (
                 <li key={subrecipe.id}>
                   {subrecipe.recipe.name} - {subrecipe.units} u ={" "}
                   {subrecipe.cost}

@@ -6,23 +6,23 @@ import { cuidSchema } from "~/schema/common";
 import { recipeCreateSchema, recipeUpdateSchema } from "~/schema/recipe";
 import { protectedProcedure, router } from "../trpc";
 
-const subRecipesInclude = {
+const subrecipesInclude = Prisma.validator<Prisma.SubrecipeArgs>()({
   include: {
     recipe: {
       include: {
-        subRecipes: true,
+        subrecipes: true,
         ingredients: { include: { ingredient: true } },
       },
     },
   },
-};
+});
 
 const recipesQuery = Prisma.validator<Prisma.RecipeArgs>()({
   include: {
     ingredients: {
       include: { ingredient: true },
     },
-    subRecipes: subRecipesInclude,
+    subrecipes: subrecipesInclude,
   },
 });
 
@@ -31,7 +31,7 @@ type RecipeIngredients = Prisma.RecipeGetPayload<
 >["ingredients"];
 type RecipeSubrecipes = Prisma.RecipeGetPayload<
   typeof recipesQuery
->["subRecipes"];
+>["subrecipes"];
 
 function getIngredientsCost(ingredients: RecipeIngredients) {
   return ingredients.reduce(
@@ -41,21 +41,21 @@ function getIngredientsCost(ingredients: RecipeIngredients) {
 }
 
 async function getSubrecipesCost(
-  subRecipes: RecipeSubrecipes,
+  subrecipes: RecipeSubrecipes,
   prisma: PrismaClient
 ): Promise<number> {
   let total = 0;
-  for (const subRecipe of subRecipes) {
-    total += getIngredientsCost(subRecipe.recipe.ingredients);
+  for (const subrecipe of subrecipes) {
+    total += getIngredientsCost(subrecipe.recipe.ingredients);
 
-    if (subRecipe.recipe.subRecipes.length === 0) {
+    if (subrecipe.recipe.subrecipes.length === 0) {
       continue;
     }
 
-    const subrecipeSubrecipes = await prisma.subRecipe.findMany({
-      ...subRecipesInclude,
+    const subrecipeSubrecipes = await prisma.subrecipe.findMany({
+      ...subrecipesInclude,
       where: {
-        parentRecipeId: subRecipe.recipe.id,
+        parentRecipeId: subrecipe.recipe.id,
       },
     });
 
@@ -81,16 +81,16 @@ export const recipeRouter = router({
       const recipesWithPrices = [];
       for (const recipe of recipes) {
         const ingredientsCost = getIngredientsCost(recipe.ingredients);
-        const subRecipesCost = await getSubrecipesCost(
-          recipe.subRecipes,
+        const subrecipesCost = await getSubrecipesCost(
+          recipe.subrecipes,
           ctx.prisma
         );
-        const cost = ingredientsCost + subRecipesCost;
+        const cost = ingredientsCost + subrecipesCost;
         const price = cost * (recipe.profitPercentage / 100 + 1);
         recipesWithPrices.push({
           ...recipe,
           ingredientsCost,
-          subRecipesCost,
+          subrecipesCost,
           cost,
           price,
         });
@@ -119,7 +119,7 @@ export const recipeRouter = router({
                 })),
               },
             },
-            subRecipes: {
+            subrecipes: {
               createMany: {
                 data: subrecipes.map(({ subrecipeId, units }) => ({
                   recipeId: subrecipeId,
@@ -147,7 +147,7 @@ export const recipeRouter = router({
               })),
             },
           },
-          subRecipes: {
+          subrecipes: {
             deleteMany: {},
             createMany: {
               data: subrecipes.map(({ subrecipeId, units }) => ({
@@ -166,7 +166,7 @@ export const recipeRouter = router({
     .mutation(async ({ ctx, input }) => {
       const counts = await ctx.prisma.recipe.findUnique({
         select: {
-          _count: { select: { subRecipes: true, parentRecipes: true } },
+          _count: { select: { subrecipes: true, parentRecipes: true } },
         },
         where: { id: input.id, userId: ctx.session.user.id },
       });
@@ -192,7 +192,7 @@ export const recipeRouter = router({
           ingredients: {
             include: { ingredient: { include: { measurementUnit: true } } },
           },
-          subRecipes: subRecipesInclude,
+          subrecipes: subrecipesInclude,
         },
         where: { id: input.recipeId, userId: ctx.session.user.id },
       });
@@ -206,9 +206,9 @@ export const recipeRouter = router({
         cost: ingredient.ingredient.unitPrice * ingredient.units,
       }));
 
-      const subRecipes = [];
-      for (const subrecipe of recipe.subRecipes) {
-        subRecipes.push({
+      const subrecipes = [];
+      for (const subrecipe of recipe.subrecipes) {
+        subrecipes.push({
           ...subrecipe,
           cost: await getSubrecipesCost([subrecipe], ctx.prisma),
         });
@@ -216,7 +216,7 @@ export const recipeRouter = router({
 
       const totalCost =
         ingredients.reduce((ac, ingredient) => ac + ingredient.cost, 0) +
-        subRecipes.reduce((ac, subrecipe) => ac + subrecipe.cost, 0);
+        subrecipes.reduce((ac, subrecipe) => ac + subrecipe.cost, 0);
 
       const price = totalCost * (recipe.profitPercentage / 100 + 1);
 
@@ -224,7 +224,7 @@ export const recipeRouter = router({
       return {
         ...recipe,
         ingredients,
-        subRecipes,
+        subrecipes,
         totalCost,
         price,
         netIncome,
