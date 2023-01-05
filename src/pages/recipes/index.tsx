@@ -21,7 +21,7 @@ const Ingredients: NextPage = () => {
       </Head>
 
       <MainLayout>
-        <h1 className="h1">Recetas</h1>
+        <h1 className="h1 mb-3">Recetas</h1>
         <SearchAndCreate
           onSearchChange={setSearch}
           createButton={<CreateRecipeModal btnClassName="w-full sm:w-auto" />}

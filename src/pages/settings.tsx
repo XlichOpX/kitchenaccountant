@@ -8,6 +8,7 @@ import { trpc } from "~/utils/trpc";
 
 const Settings: NextPage = () => {
   const { data: settings } = trpc.auth.getUserSettings.useQuery();
+
   return (
     <>
       <Head>
@@ -15,7 +16,7 @@ const Settings: NextPage = () => {
       </Head>
 
       <MainLayout>
-        <h1 className="h1">Ajustes</h1>
+        <h1 className="h1 mb-3">Ajustes</h1>
 
         {settings && (
           <SettingsForm

@@ -23,7 +23,7 @@ const Ingredients: NextPage = () => {
       </Head>
 
       <MainLayout>
-        <h1 className="h1">Ingredientes</h1>
+        <h1 className="h1 mb-3">Ingredientes</h1>
         <SearchAndCreate
           onSearchChange={setSearch}
           createButton={

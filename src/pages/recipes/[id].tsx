@@ -2,7 +2,9 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { MainLayout } from "~/components/main-layout";
+import { EditRecipeModal } from "~/components/recipes/edit-recipe-modal";
 import { Alert } from "~/components/ui/alert";
+import { Card } from "~/components/ui/card";
 import { CenteredSpinner } from "~/components/ui/centered-spinner";
 import { Link } from "~/components/ui/link";
 import { cuidSchema } from "~/schema/common";
@@ -31,51 +33,69 @@ const RecipeDetail: NextPage<
           ← Volver a todas las recetas
         </Link>
 
-        <h1 className="h1">{recipe?.name ?? "Cargando..."}</h1>
-
-        {error && <Alert>{error.data?.code}</Alert>}
         {recipe && (
-          <>
-            <h2 className="h2">Recetas base</h2>
-            <ul className="mb-3 list-inside list-disc">
-              {recipe.subrecipes.map((subrecipe) => (
-                <li key={subrecipe.id}>
-                  {subrecipe.recipe.name} - {subrecipe.units} u ={" "}
-                  {userSettings?.currencySymbol}
-                  {subrecipe.cost.toLocaleString()}
-                </li>
-              ))}
-            </ul>
+          <Card>
+            <div className="mb-2 flex justify-between">
+              <h1 className="h1">{recipe.name}</h1>
+              <EditRecipeModal
+                recipe={{
+                  id: recipe.id,
+                  ingredients: recipe.ingredients,
+                  name: recipe.name,
+                  profitPercentage: recipe.profitPercentage,
+                  subrecipes: recipe.subrecipes,
+                }}
+              />
+            </div>
+            <hr className="mb-2" />
 
-            <h2 className="h2">Ingredientes</h2>
-            <ul className="mb-3 list-inside list-disc">
-              {recipe.ingredients.map((ingredient) => (
-                <li key={ingredient.id}>
-                  {ingredient.ingredient.name} - {ingredient.units}{" "}
-                  {ingredient.ingredient.measurementUnit.symbol} ={" "}
-                  {userSettings?.currencySymbol}
-                  {ingredient.cost.toLocaleString()}
-                </li>
-              ))}
-            </ul>
+            {error && <Alert>{error.data?.code}</Alert>}
+            <>
+              {recipe.subrecipes.length > 0 && (
+                <>
+                  <h2 className="h2">Recetas base</h2>
+                  <ul className="mb-3 list-inside list-disc">
+                    {recipe.subrecipes.map((subrecipe) => (
+                      <li key={subrecipe.id}>
+                        {subrecipe.recipe.name} - {subrecipe.units} u ={" "}
+                        {userSettings?.currencySymbol}
+                        {subrecipe.cost.toLocaleString()}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
-            <h2 className="h2">Cálculos</h2>
-            <ul className="mb-3 list-inside list-disc">
-              <li>
-                Costo total: {userSettings?.currencySymbol}
-                {recipe.totalCost.toLocaleString()}
-              </li>
-              <li>
-                Precio de venta: {userSettings?.currencySymbol}
-                {recipe.price.toLocaleString()}
-              </li>
-              <li>
-                Ganancia: {recipe.profitPercentage.toLocaleString()} % ={" "}
-                {userSettings?.currencySymbol}
-                {recipe.netIncome.toLocaleString()}
-              </li>
-            </ul>
-          </>
+              <h2 className="h2">Ingredientes</h2>
+              <ul className="mb-3 list-inside list-disc">
+                {recipe.ingredients.map((ingredient) => (
+                  <li key={ingredient.id}>
+                    {ingredient.ingredient.name} - {ingredient.units}{" "}
+                    {ingredient.ingredient.measurementUnit.symbol} ={" "}
+                    {userSettings?.currencySymbol}
+                    {ingredient.cost.toLocaleString()}
+                  </li>
+                ))}
+              </ul>
+
+              <h2 className="h2">Cálculos</h2>
+              <ul className="mb-3 list-inside list-disc">
+                <li>
+                  Costo total: {userSettings?.currencySymbol}
+                  {recipe.totalCost.toLocaleString()}
+                </li>
+                <li>
+                  Precio de venta: {userSettings?.currencySymbol}
+                  {recipe.price.toLocaleString()}
+                </li>
+                <li>
+                  Ganancia: {recipe.profitPercentage.toLocaleString()} % ={" "}
+                  {userSettings?.currencySymbol}
+                  {recipe.netIncome.toLocaleString()}
+                </li>
+              </ul>
+            </>
+          </Card>
         )}
         {isLoading && <CenteredSpinner />}
       </MainLayout>

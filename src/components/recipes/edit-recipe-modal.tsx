@@ -21,7 +21,10 @@ import { RecipeForm } from "./recipe-form";
 export const EditRecipeModal = ({
   recipe,
 }: {
-  recipe: RouterOutputs["recipe"]["getAll"][number];
+  recipe: Omit<
+    RouterOutputs["recipe"]["getAll"][number],
+    "ingredientsCost" | "subrecipesCost" | "cost" | "price" | "userId"
+  >;
 }) => {
   const [open, setOpen] = useState(false);
   const { data: ingredients, isLoading: isLoadingIngredients } =
@@ -87,6 +90,9 @@ export const EditRecipeModal = ({
                     {
                       onSuccess: async () => {
                         utils.recipe.getAll.invalidate();
+                        utils.recipe.getById.invalidate({
+                          recipeId: recipe.id,
+                        });
                         setOpen(false);
                       },
                     }
