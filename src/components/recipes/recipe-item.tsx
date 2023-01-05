@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { RouterOutputs } from "~/utils/trpc";
+import { trpc } from "~/utils/trpc";
 import { Card } from "../ui/card";
 import { EditRecipeModal } from "./edit-recipe-modal";
 
@@ -8,6 +9,8 @@ export function RecipeItem({
 }: {
   recipe: RouterOutputs["recipe"]["getAll"][number];
 }) {
+  const { data: userSettings } = trpc.auth.getUserSettings.useQuery();
+
   return (
     <Card asChild>
       <li>
@@ -20,10 +23,17 @@ export function RecipeItem({
           <EditRecipeModal recipe={recipe} />
         </div>
         <hr className="my-2" />
-        <p>Costo: {recipe.cost.toLocaleString()}</p>
-        <p>Precio de venta: {recipe.price.toLocaleString()}</p>
+        <p>
+          Costo: {userSettings?.currencySymbol}
+          {recipe.cost.toLocaleString()}
+        </p>
+        <p>
+          Precio de venta: {userSettings?.currencySymbol}
+          {recipe.price.toLocaleString()}
+        </p>
         <p>
           Ganancia: {recipe.profitPercentage.toLocaleString()} % ={" "}
+          {userSettings?.currencySymbol}
           {(recipe.price - recipe.cost).toLocaleString()}
         </p>
       </li>

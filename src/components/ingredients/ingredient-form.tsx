@@ -2,6 +2,7 @@ import type { DefaultValues, SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { ERROR_MESSAGES } from "~/utils/forms";
 import type { RouterInputs, RouterOutputs } from "~/utils/trpc";
+import { trpc } from "~/utils/trpc";
 import { FormFeedback } from "../ui/form-feedback";
 import { FormLabel } from "../ui/form-label";
 import { Input } from "../ui/input";
@@ -28,6 +29,8 @@ export const IngredientForm = ({
     defaultValues,
   });
 
+  const { data: userSettings } = trpc.auth.getUserSettings.useQuery();
+
   return (
     <form
       className="flex flex-col gap-3"
@@ -50,7 +53,9 @@ export const IngredientForm = ({
 
       <div className="flex gap-4">
         <div>
-          <FormLabel htmlFor="price">Precio</FormLabel>
+          <FormLabel htmlFor="price">
+            Precio ({userSettings?.currencySymbol})
+          </FormLabel>
           <Input
             id="price"
             type="number"

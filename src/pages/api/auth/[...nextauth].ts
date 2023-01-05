@@ -25,6 +25,11 @@ export const authOptions: NextAuthOptions = {
     }),
     // ...add more providers here
   ],
+  events: {
+    async createUser({ user }) {
+      await prisma.settings.create({ data: { userId: user.id } });
+    },
+  },
 };
 
 export default NextAuth(authOptions);

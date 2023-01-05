@@ -18,6 +18,8 @@ const RecipeDetail: NextPage<
     error,
   } = trpc.recipe.getById.useQuery({ recipeId }, { retry: false });
 
+  const { data: userSettings } = trpc.auth.getUserSettings.useQuery();
+
   return (
     <>
       <Head>
@@ -39,7 +41,8 @@ const RecipeDetail: NextPage<
               {recipe.subrecipes.map((subrecipe) => (
                 <li key={subrecipe.id}>
                   {subrecipe.recipe.name} - {subrecipe.units} u ={" "}
-                  {subrecipe.cost}
+                  {userSettings?.currencySymbol}
+                  {subrecipe.cost.toLocaleString()}
                 </li>
               ))}
             </ul>
@@ -50,6 +53,7 @@ const RecipeDetail: NextPage<
                 <li key={ingredient.id}>
                   {ingredient.ingredient.name} - {ingredient.units}{" "}
                   {ingredient.ingredient.measurementUnit.symbol} ={" "}
+                  {userSettings?.currencySymbol}
                   {ingredient.cost.toLocaleString()}
                 </li>
               ))}
@@ -57,10 +61,17 @@ const RecipeDetail: NextPage<
 
             <h2 className="h2">Cálculos</h2>
             <ul className="mb-3 list-inside list-disc">
-              <li>Costo total: {recipe.totalCost.toLocaleString()}</li>
-              <li>Precio de venta: {recipe.price.toLocaleString()}</li>
+              <li>
+                Costo total: {userSettings?.currencySymbol}
+                {recipe.totalCost.toLocaleString()}
+              </li>
+              <li>
+                Precio de venta: {userSettings?.currencySymbol}
+                {recipe.price.toLocaleString()}
+              </li>
               <li>
                 Ganancia: {recipe.profitPercentage.toLocaleString()} % ={" "}
+                {userSettings?.currencySymbol}
                 {recipe.netIncome.toLocaleString()}
               </li>
             </ul>
