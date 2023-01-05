@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { settingsUpdateSchema } from "~/schema/settings";
 import { protectedProcedure, router } from "../trpc";
 
 export const authRouter = router({
@@ -13,4 +14,15 @@ export const authRouter = router({
 
     return settings;
   }),
+
+  updateUserSettings: protectedProcedure
+    .input(settingsUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.settings.update({
+        data: input,
+        where: {
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
 });

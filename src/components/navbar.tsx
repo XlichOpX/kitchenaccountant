@@ -3,6 +3,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
+import { BsGearFill } from "react-icons/bs";
 import { FaBook } from "react-icons/fa";
 import { GiFlour } from "react-icons/gi";
 import { IoLogOutSharp } from "react-icons/io5";
@@ -17,6 +18,7 @@ const links = [
     icon: <GiFlour className="h-6 w-6" />,
   },
   { label: "Recetas", href: "/recipes", icon: <FaBook /> },
+  { label: "Ajustes", href: "/settings", icon: <BsGearFill /> },
 ];
 
 export function Navbar() {
