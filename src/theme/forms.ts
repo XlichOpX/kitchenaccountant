@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const baseInputClasses = cva(
-  "shadow-sm bg-white block w-full placeholder:italic placeholder:text-gray-400 focus:ring-2 focus-within:outline-none",
+  "shadow bg-white block w-full placeholder:italic placeholder:text-gray-400 focus:ring-2 focus-within:outline-none",
   {
     variants: {
       size: {

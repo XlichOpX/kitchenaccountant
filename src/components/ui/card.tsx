@@ -10,9 +10,7 @@ export function Card({
   const Comp = asChild ? Slot : "div";
   return (
     <Comp
-      className={
-        "rounded border bg-white p-3 shadow-sm" + (` ${className}` ?? "")
-      }
+      className={"rounded border bg-white p-3 shadow" + (` ${className}` ?? "")}
       {...props}
     >
       {children}
