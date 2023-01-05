@@ -10,4 +10,8 @@ body {
   .h1 {
     @apply mb-3 text-center text-2xl font-bold sm:text-left;
   }
+
+  .h2 {
+    @apply mb-1 text-xl font-bold;
+  }
 }
