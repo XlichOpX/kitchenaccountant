@@ -1,5 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
@@ -36,9 +37,3 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
-function GoogleProvider(arg0: {
-  clientId: string | undefined;
-  clientSecret: string | undefined;
-}): import("next-auth/providers/index.js").Provider {
-  throw new Error("Function not implemented.");
-}
