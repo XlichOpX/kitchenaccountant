@@ -23,7 +23,10 @@ export const authOptions: NextAuthOptions = {
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
-    // ...add more providers here
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   events: {
     async createUser({ user }) {
@@ -33,3 +36,9 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+function GoogleProvider(arg0: {
+  clientId: string | undefined;
+  clientSecret: string | undefined;
+}): import("next-auth/providers/index.js").Provider {
+  throw new Error("Function not implemented.");
+}
