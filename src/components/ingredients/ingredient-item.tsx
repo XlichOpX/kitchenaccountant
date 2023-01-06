@@ -22,7 +22,10 @@ export function IngredientItem({
           Precio: {userSettings?.currencySymbol}
           {ingredient.price.toLocaleString()}
         </p>
-        <p>Unidades: {ingredient.packageUnits.toLocaleString()}</p>
+        <p>
+          Unidades: {ingredient.packageUnits.toLocaleString()}{" "}
+          {ingredient.measurementUnit.symbol}
+        </p>
         <p>
           Precio unitario: {userSettings?.currencySymbol}
           {ingredient.unitPrice.toLocaleString()}

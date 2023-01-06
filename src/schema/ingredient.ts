@@ -3,7 +3,7 @@ import { cuidSchema } from "./common";
 
 export const ingredientCreateSchema = z.object({
   name: z.string().min(3).max(32),
-  price: z.number().positive(),
+  price: z.number().nonnegative(),
   packageUnits: z.number().positive(),
   measurementUnitId: z.string().min(1).max(64),
 });
