@@ -4,7 +4,7 @@ import type { ComponentPropsWithRef } from "react";
 import { forwardRef } from "react";
 import { CenteredSpinner } from "./centered-spinner";
 
-const buttonClasses = cva(
+export const buttonClasses = cva(
   "overflow-hidden relative rounded flex gap-2 items-center active:translate-y-[1px] justify-center font-medium disabled:cursor-not-allowed focus-within:outline-none focus:ring-2",
   {
     variants: {
@@ -19,6 +19,7 @@ const buttonClasses = cva(
       },
       size: {
         md: "px-2 py-1",
+        lg: "px-3 py-1 text-lg",
         sm: "p-0.5",
       },
     },

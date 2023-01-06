@@ -1,8 +1,9 @@
 import { type NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
+import { ColorLogo } from "~/components/color-logo";
+import { buttonClasses } from "~/components/ui/button";
 import { env } from "~/env/client.mjs";
 
 const Home: NextPage = () => {
@@ -13,17 +14,18 @@ const Home: NextPage = () => {
         <meta name="description" content="Gestor de recetas de cocina" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Kitchen<span className="text-[hsl(280,100%,70%)]">Accountant</span>
+      <main className="flex min-h-screen flex-col items-center justify-center">
+        <ColorLogo className="m-4 h-64 w-64" />
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-4 ">
+          <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
+            Kitchen<span className="text-amber-600">Accountant</span>
           </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <AppLink href="/ingredients" label="Ingredientes" />
-            <AppLink href="/recipes" label="Recetas" />
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <AuthShowcase />
+          <p className="text-center text-lg">
+            ¡Un sencillo gestor de recetas que te permitirá calcular sus costos
+            de manera rápida!
+          </p>
+          <div className="grid grid-cols-1 gap-4 md:gap-8">
+            <AppLink href="/ingredients" label="Ir a la aplicación" />
           </div>
         </div>
       </main>
@@ -33,40 +35,14 @@ const Home: NextPage = () => {
 
 export default Home;
 
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && (
-          <span>Ha iniciado sesión como {sessionData.user?.name}</span>
-        )}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => signOut() : () => signIn()}
-      >
-        {sessionData ? "Cerrar sesión" : "Iniciar sesión"}
-      </button>
-    </div>
-  );
-};
-
 const AppLink = ({
-  description,
   label,
   href,
 }: {
-  description?: string;
   label: string;
   href: LinkProps["href"];
 }) => (
-  <Link
-    className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-    href={href}
-  >
-    <h3 className="text-2xl font-bold">{label} →</h3>
-    {description && <div className="text-lg">{description}</div>}
+  <Link className={buttonClasses({ size: "lg" })} href={href}>
+    {label} →
   </Link>
 );
