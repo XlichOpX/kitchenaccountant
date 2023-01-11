@@ -76,6 +76,9 @@ export const recipeRouter = router({
             name: { contains: input.search, mode: "insensitive" },
           }),
         },
+        orderBy: {
+          name: "asc",
+        },
       });
 
       const recipesWithPrices = [];

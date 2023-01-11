@@ -19,6 +19,9 @@ export const ingredientRouter = router({
             name: { contains: input.search, mode: "insensitive" },
           }),
         },
+        orderBy: {
+          name: "asc",
+        },
       });
     }),
 
