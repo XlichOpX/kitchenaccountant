@@ -1,28 +1,26 @@
-# Create T3 App
+# KitchenAccountant
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Una aplicación sencilla que permite el manejo de ingredientes, recetas y calcular sus costos. Permite utilizar recetas dentro de otras, facilitando así la organización de las mismas.
 
-## What's next? How do I make an app with this?
+## Herramientas utilizadas
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Create T3 App
+- Prisma ORM
+- tRPC
+- Tailwind CSS
+- Radix UI
+- NextAuth.js
+- Zod
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## ¿Cómo ejecutar este proyecto?
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Una vez clonado el repositorio, crear un archivo `.env` basado en `.env.example` y escribir las variables de entorno necesarias.
 
-## Learn More
+Seguidamente, abrir una terminal en el directorio del proyecto y ejecutar los siguientes comandos:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- `pnpm install`
+- `pnpm prisma migrate dev`
+- `pnpm prisma db seed`
+- `pnpm dev`
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+La aplicación será accesible desde `http://localhost:3000`
