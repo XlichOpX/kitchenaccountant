@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { INGREDIENTS, MEASUREMENT_UNITS } from "./mock-data";
+import { MEASUREMENT_UNITS } from "./mock-data";
 
 const prisma = new PrismaClient();
 const timerLabel = "Tiempo de ejecución";
@@ -14,11 +14,6 @@ async function main() {
   console.log("📏 Recreando unidades de medida...");
   for (const data of MEASUREMENT_UNITS) {
     await prisma.measurementUnit.create({ data });
-  }
-
-  console.log("🌾 Recreando ingredientes...");
-  for (const data of INGREDIENTS) {
-    await prisma.ingredient.create({ data });
   }
 
   console.timeEnd(timerLabel);

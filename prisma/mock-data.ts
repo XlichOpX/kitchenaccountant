@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
-const mockUserEmail = "yhan.carlos2001@gmail.com";
+// const mockUserEmail = "yhan.carlos2001@gmail.com";
 
 export const MEASUREMENT_UNITS: Prisma.MeasurementUnitCreateInput[] = [
   { symbol: "g" },
@@ -8,7 +8,8 @@ export const MEASUREMENT_UNITS: Prisma.MeasurementUnitCreateInput[] = [
   { symbol: "ml" },
 ];
 
-export const INGREDIENTS: Prisma.IngredientCreateInput[] = [
+/* 
+  export const INGREDIENTS: Prisma.IngredientCreateInput[] = [
   formatIngredient("Harina", 1.1, 1000, "g"),
   formatIngredient("Huevos", 2.75, 15, "u"),
   formatIngredient("Agua", 0, 1000, "ml"),
@@ -36,3 +37,4 @@ function formatIngredient(
     user: { connect: { email: mockUserEmail } },
   });
 }
+*/
