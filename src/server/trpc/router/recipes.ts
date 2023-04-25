@@ -46,7 +46,7 @@ async function getSubrecipesCost(
 ): Promise<number> {
   let total = 0;
   for (const subrecipe of subrecipes) {
-    total += getIngredientsCost(subrecipe.recipe.ingredients);
+    total += getIngredientsCost(subrecipe.recipe.ingredients) * subrecipe.units;
 
     if (subrecipe.recipe.subrecipes.length === 0) {
       continue;
