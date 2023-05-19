@@ -49,7 +49,7 @@ export const ingredientRouter = router({
     .input(ingredientUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.ingredient.update({
-        data: input,
+        data: { ...input, unitPrice: input.price / input.packageUnits },
         where: { id: input.id, userId: ctx.session.user.id },
       });
     }),
